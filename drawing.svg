@@ -397,17 +397,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.7700111"
-     inkscape:cx="1275.0337"
-     inkscape:cy="1628.8287"
+     inkscape:zoom="0.69250278"
+     inkscape:cx="1037.0575"
+     inkscape:cy="3043.5051"
      inkscape:document-units="px"
      inkscape:current-layer="layer3"
      showgrid="false"
      inkscape:window-width="1440"
      inkscape:window-height="851"
-     inkscape:window-x="0"
-     inkscape:window-y="1"
-     inkscape:window-maximized="1" />
+     inkscape:window-x="22"
+     inkscape:window-y="26"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -449,79 +449,75 @@
          x="285.3681"
          y="339.69958" /></text>
     <g
-       id="g11586"
-       transform="translate(-673.85584,-2156.0128)">
+       id="g3636"
+       transform="matrix(2.0903224,0,0,2.3693774,816.33456,-2164.3051)">
       <g
-         transform="matrix(2.0903224,0,0,2.3693774,1262.0325,-12.624396)"
-         id="g3636">
+         id="g3588">
         <g
-           id="g3588">
-          <g
-             id="g3590">
-            <path
-               inkscape:connector-curvature="0"
-               d="m 91.079,80.894 c -0.019,0 -0.034,0 -0.054,0 l -7.646,-0.017 c 0,0 8.967,-7.575 9.196,-7.838 2.508,-2.281 4.02,-5.494 3.253,-9.068 L 89.86,36.116 c -1.11,-5.189 -6.372,-7.68 -10.842,-7.81 l -0.038,0.002 c 0,0 -1.573,0.009 -2.933,0.268 -1.418,0.271 -2.666,0.954 -2.666,0.954 -2.159,1.047 -4.252,2.83 -5.552,5.06 -0.092,0.14 -0.196,0.268 -0.274,0.42 -4.854,9.343 -10.362,14.734 -19.013,18.605 -2.525,1.131 -3.657,4.094 -2.525,6.619 0.832,1.861 2.66,2.965 4.574,2.965 0.686,0 1.381,-0.142 2.046,-0.438 6.575,-2.944 11.785,-6.677 16.197,-11.724 l 3.834,17.894 c 0.186,0.868 0.488,1.649 0.87,2.362 l -13.521,11.32 c -2.211,1.85 -3.021,4.889 -2.025,7.596 0.988,2.689 3.549,4.475 6.412,4.475 0.017,0 0.032,0 0.052,0 l 26.674,0 c 3.773,-0.029 6.809,-3.311 6.78,-7.083 -0.03,-3.757 -3.081,-6.707 -6.831,-6.707 z"
-               id="path3592" />
-            <circle
-               cx="70.511002"
-               cy="16.132"
-               r="12.905"
-               id="circle3594" />
-            <path
-               inkscape:connector-curvature="0"
-               d="M 8.454,69.072 3.894,65.41 c -1.03,-0.83 -2.541,-0.664 -3.366,0.367 -0.828,1.03 -0.664,2.538 0.366,3.366 l 4.651,3.735 0,10.162 c 0,0.049 -4.079,8.035 -4.079,8.035 -0.61,1.174 -0.153,2.619 1.019,3.229 0.354,0.183 0.731,0.271 1.104,0.271 0.863,0 1.699,-0.47 2.125,-1.289 l 4.122,-7.92 4.612,8.01 c 0.442,0.77 1.248,1.199 2.078,1.199 0.404,0 0.813,-0.103 1.192,-0.32 1.146,-0.659 1.54,-2.123 0.88,-3.27 l -4.025,-6.988 14.904,0 0,8.185 c 0,1.321 1.073,2.396 2.395,2.396 1.323,0 2.396,-1.072 2.396,-2.396 l 0,-9.058 c 0.003,-0.03 0.017,-0.055 0.017,-0.084 l 0,-7.572 -11.155,-6.396 -14.676,0 0,0 z"
-               id="path3596" />
-            <path
-               inkscape:connector-curvature="0"
-               d="m 40.482,64.203 c -1.481,-1.395 -1.978,-3.025 -3.64,-4.209 -0.289,-0.205 -0.583,-0.414 -0.891,-0.59 -0.186,-0.104 -0.244,-0.225 -0.225,-0.425 0.072,-0.687 0.14,-1.374 0.195,-2.062 0.099,-1.232 -0.257,-2.354 -1.246,-3.08 -0.396,-0.291 -2.356,-1.24 -3.208,2.006 -0.186,0.706 -0.438,1.408 -0.775,2.053 -1.231,2.367 -2.795,4.529 -4.29,6.732 -0.684,1.004 -1.365,2.008 -2.047,3.011 l 10.473,5.963 c 0,0 2.018,-2.207 2.302,-2.083 0.393,0.174 0.79,0.344 1.184,0.516 1.151,0.5 2.354,0.733 3.616,0.66 2.139,-0.125 4.368,-1.262 4.572,-3.828 0.189,-2.355 -5.521,-4.193 -6.02,-4.664 z"
-               id="path3598" />
-          </g>
+           id="g3590">
+          <path
+             id="path3592"
+             d="m 91.079,80.894 c -0.019,0 -0.034,0 -0.054,0 l -7.646,-0.017 c 0,0 8.967,-7.575 9.196,-7.838 2.508,-2.281 4.02,-5.494 3.253,-9.068 L 89.86,36.116 c -1.11,-5.189 -6.372,-7.68 -10.842,-7.81 l -0.038,0.002 c 0,0 -1.573,0.009 -2.933,0.268 -1.418,0.271 -2.666,0.954 -2.666,0.954 -2.159,1.047 -4.252,2.83 -5.552,5.06 -0.092,0.14 -0.196,0.268 -0.274,0.42 -4.854,9.343 -10.362,14.734 -19.013,18.605 -2.525,1.131 -3.657,4.094 -2.525,6.619 0.832,1.861 2.66,2.965 4.574,2.965 0.686,0 1.381,-0.142 2.046,-0.438 6.575,-2.944 11.785,-6.677 16.197,-11.724 l 3.834,17.894 c 0.186,0.868 0.488,1.649 0.87,2.362 l -13.521,11.32 c -2.211,1.85 -3.021,4.889 -2.025,7.596 0.988,2.689 3.549,4.475 6.412,4.475 0.017,0 0.032,0 0.052,0 l 26.674,0 c 3.773,-0.029 6.809,-3.311 6.78,-7.083 -0.03,-3.757 -3.081,-6.707 -6.831,-6.707 z"
+             inkscape:connector-curvature="0" />
+          <circle
+             id="circle3594"
+             r="12.905"
+             cy="16.132"
+             cx="70.511002" />
+          <path
+             id="path3596"
+             d="M 8.454,69.072 3.894,65.41 c -1.03,-0.83 -2.541,-0.664 -3.366,0.367 -0.828,1.03 -0.664,2.538 0.366,3.366 l 4.651,3.735 0,10.162 c 0,0.049 -4.079,8.035 -4.079,8.035 -0.61,1.174 -0.153,2.619 1.019,3.229 0.354,0.183 0.731,0.271 1.104,0.271 0.863,0 1.699,-0.47 2.125,-1.289 l 4.122,-7.92 4.612,8.01 c 0.442,0.77 1.248,1.199 2.078,1.199 0.404,0 0.813,-0.103 1.192,-0.32 1.146,-0.659 1.54,-2.123 0.88,-3.27 l -4.025,-6.988 14.904,0 0,8.185 c 0,1.321 1.073,2.396 2.395,2.396 1.323,0 2.396,-1.072 2.396,-2.396 l 0,-9.058 c 0.003,-0.03 0.017,-0.055 0.017,-0.084 l 0,-7.572 -11.155,-6.396 -14.676,0 0,0 z"
+             inkscape:connector-curvature="0" />
+          <path
+             id="path3598"
+             d="m 40.482,64.203 c -1.481,-1.395 -1.978,-3.025 -3.64,-4.209 -0.289,-0.205 -0.583,-0.414 -0.891,-0.59 -0.186,-0.104 -0.244,-0.225 -0.225,-0.425 0.072,-0.687 0.14,-1.374 0.195,-2.062 0.099,-1.232 -0.257,-2.354 -1.246,-3.08 -0.396,-0.291 -2.356,-1.24 -3.208,2.006 -0.186,0.706 -0.438,1.408 -0.775,2.053 -1.231,2.367 -2.795,4.529 -4.29,6.732 -0.684,1.004 -1.365,2.008 -2.047,3.011 l 10.473,5.963 c 0,0 2.018,-2.207 2.302,-2.083 0.393,0.174 0.79,0.344 1.184,0.516 1.151,0.5 2.354,0.733 3.616,0.66 2.139,-0.125 4.368,-1.262 4.572,-3.828 0.189,-2.355 -5.521,-4.193 -6.02,-4.664 z"
+             inkscape:connector-curvature="0" />
         </g>
-        <g
-           id="g3600" />
-        <g
-           id="g3602" />
-        <g
-           id="g3604" />
-        <g
-           id="g3606" />
-        <g
-           id="g3608" />
-        <g
-           id="g3610" />
-        <g
-           id="g3612" />
-        <g
-           id="g3614" />
-        <g
-           id="g3616" />
-        <g
-           id="g3618" />
-        <g
-           id="g3620" />
-        <g
-           id="g3622" />
-        <g
-           id="g3624" />
-        <g
-           id="g3626" />
-        <g
-           id="g3628" />
       </g>
-      <text
-         transform="scale(0.93926791,1.064659)"
-         sodipodi:linespacing="125%"
-         id="text3667"
-         y="-102.76926"
-         x="871.41217"
-         style="font-style:normal;font-weight:normal;font-size:27.81850624px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         xml:space="preserve"><tspan
-           style="font-size:22.2548027px"
-           y="-102.76926"
-           x="871.41217"
-           id="tspan3669"
-           sodipodi:role="line">Research on LA Animal Service Intake Data</tspan></text>
+      <g
+         id="g3600" />
+      <g
+         id="g3602" />
+      <g
+         id="g3604" />
+      <g
+         id="g3606" />
+      <g
+         id="g3608" />
+      <g
+         id="g3610" />
+      <g
+         id="g3612" />
+      <g
+         id="g3614" />
+      <g
+         id="g3616" />
+      <g
+         id="g3618" />
+      <g
+         id="g3620" />
+      <g
+         id="g3622" />
+      <g
+         id="g3624" />
+      <g
+         id="g3626" />
+      <g
+         id="g3628" />
     </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:27.81850624px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="304.65146"
+       y="-2144.1189"
+       id="text3667"
+       sodipodi:linespacing="125%"
+       transform="scale(0.93926788,1.064659)"><tspan
+         sodipodi:role="line"
+         id="tspan3669"
+         x="304.65146"
+         y="-2144.1189"
+         style="font-size:22.2548027px">Research on LA Animal Service Intake Data</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -532,22 +528,22 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:14.39291573px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="158.60643"
-       y="-2073.5759"
+       x="310.42462"
+       y="-2002.1532"
        id="text4494"
        sodipodi:linespacing="125%"
        transform="scale(0.95116211,1.0513455)"><tspan
          sodipodi:role="line"
          id="tspan4496"
-         x="158.60643"
-         y="-2073.5759">Group 2</tspan><tspan
+         x="310.42462"
+         y="-2002.1532">Group 2</tspan><tspan
          sodipodi:role="line"
-         x="158.60643"
-         y="-2055.5847"
+         x="310.42462"
+         y="-1984.1621"
          id="tspan4498" /><tspan
          sodipodi:role="line"
-         x="158.60643"
-         y="-2037.5935"
+         x="310.42462"
+         y="-1966.1709"
          id="tspan4500">Vitid Nakareseisoon and Wenjia Wang</tspan></text>
     <text
        sodipodi:linespacing="125%"
@@ -570,54 +566,54 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:14.20732021px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="868.8255"
-       y="-2080.0852"
+       x="1248.8967"
+       y="-2075.8552"
        id="text4658"
        sodipodi:linespacing="125%"
        transform="scale(0.97644216,1.0241262)"><tspan
          sodipodi:role="line"
          id="tspan4660"
-         x="868.8255"
-         y="-2080.0852">Target Audience: </tspan><tspan
+         x="1248.8967"
+         y="-2075.8552">Target Audience: </tspan><tspan
          sodipodi:role="line"
-         x="868.8255"
-         y="-2062.3262"
+         x="1248.8967"
+         y="-2058.0962"
          id="tspan4662" /><tspan
          sodipodi:role="line"
-         x="868.8255"
-         y="-2044.5669"
+         x="1248.8967"
+         y="-2040.3369"
          id="tspan4682">Shelter officer</tspan><tspan
          sodipodi:role="line"
-         x="868.8255"
-         y="-2026.8077"
+         x="1248.8967"
+         y="-2022.5778"
          id="tspan4674">People who want to adopt a pet</tspan><tspan
          sodipodi:role="line"
-         x="868.8255"
-         y="-2009.0486"
+         x="1248.8967"
+         y="-2004.8186"
          id="tspan4676">Pet owener who is missing his pet</tspan><tspan
          sodipodi:role="line"
-         x="868.8255"
-         y="-1991.2894"
+         x="1248.8967"
+         y="-1987.0594"
          id="tspan4664" /><tspan
          sodipodi:role="line"
-         x="868.8255"
-         y="-1973.5303"
+         x="1248.8967"
+         y="-1969.3003"
          id="tspan4666" /><tspan
          sodipodi:role="line"
-         x="868.8255"
-         y="-1955.7711"
+         x="1248.8967"
+         y="-1951.5411"
          id="tspan4668" /><tspan
          sodipodi:role="line"
-         x="868.8255"
-         y="-1938.012"
+         x="1248.8967"
+         y="-1933.782"
          id="tspan4692">Aim: </tspan><tspan
          sodipodi:role="line"
-         x="868.8255"
-         y="-1920.2528"
+         x="1248.8967"
+         y="-1916.0228"
          id="tspan4694">Investgate the trend and relationship of intake animals</tspan><tspan
          sodipodi:role="line"
-         x="868.8255"
-         y="-1902.4937"
+         x="1248.8967"
+         y="-1898.2637"
          id="tspan4672">Look for a particular pet </tspan></text>
     <text
        xml:space="preserve"
@@ -1913,6 +1909,7 @@
 
 
 
+
 Filter(AnimalType)</text>
         </g>
         <g
@@ -2028,6 +2025,7 @@ Filter(AnimalType)</text>
              style="font-size:10.00003242px;font-family:Calibri;fill:#feffff"><v:paragraph
    v:horizAlign="1" />
 <v:tabList />
+
 
 
 
@@ -2151,6 +2149,7 @@ Aggregate?</text>
 
 
 
+
 Absolute/Relative</text>
         </g>
         <g
@@ -2263,6 +2262,7 @@ Absolute/Relative</text>
 
 
 
+
 Describe a general idea behind the data and overall train</text>
         </g>
         <g
@@ -2344,6 +2344,7 @@ Describe a general idea behind the data and overall train</text>
 
 
 
+
 Provide capability to explore data further</text>
           </g>
           <g
@@ -2420,6 +2421,7 @@ Provide capability to explore data further</text>
 
 
 
+
 Describe a general idea about the operation on each shelter</text>
         </g>
         <g
@@ -2460,6 +2462,7 @@ Describe a general idea about the operation on each shelter</text>
              style="font-size:10.00003242px;font-family:Calibri;fill:#4f87bb"><v:paragraph
    v:horizAlign="1" />
 <v:tabList />
+
 
 
 
@@ -2518,6 +2521,7 @@ Time Selection</text>
              style="font-size:10.00003242px;font-family:Calibri;fill:#feffff"><v:paragraph
    v:horizAlign="1" />
 <v:tabList />
+
 
 
 
@@ -2685,6 +2689,7 @@ Jan</text>
 
 
 
+
 Click to zoom in</text>
           </g>
           <g
@@ -2798,6 +2803,7 @@ Click to zoom in</text>
 
 
 
+
 Click the shelter to show taxonomy</text>
           </g>
           <g
@@ -2874,6 +2880,7 @@ Click the shelter to show taxonomy</text>
 
 
 
+
 Shelter Description</text>
         </g>
         <g
@@ -2914,6 +2921,7 @@ Shelter Description</text>
              style="font-size:10.00003242px;font-family:Calibri;fill:#4f87bb"><v:paragraph
    v:horizAlign="1" />
 <v:tabList />
+
 
 
 
@@ -2960,6 +2968,7 @@ Animal Description</text>
 
 
 
+
 Feb</text>
         </g>
         <g
@@ -2998,6 +3007,7 @@ Feb</text>
              style="font-size:5.99990416px;font-family:Calibri;fill:#4f87bb"><v:paragraph
    v:horizAlign="1" />
 <v:tabList />
+
 
 
 
@@ -3076,6 +3086,7 @@ Mar</text>
              style="font-size:10.00003242px;font-family:Calibri;fill:#4f87bb"><v:paragraph
    v:horizAlign="1" />
 <v:tabList />
+
 
 
 
@@ -3161,6 +3172,7 @@ Describe a general idea behind Intake Type and Breed</text>
 
 
 
+
 Show only top 10(?). Can filter by Breed and Intake Type</text>
           </g>
           <g
@@ -3233,6 +3245,7 @@ Show only top 10(?). Can filter by Breed and Intake Type</text>
              style="font-size:10.00003242px;font-family:Calibri;fill:#4f87bb"><v:paragraph
    v:horizAlign="1" />
 <v:tabList />
+
 
 
 
@@ -3352,6 +3365,7 @@ Describe a general idea behind Intake Condition and Breed</text>
 
 
 
+
 Show only top 10(?). Can filter by Breed and Intake Condition</text>
           </g>
           <g
@@ -3462,6 +3476,7 @@ Show only top 10(?). Can filter by Breed and Intake Condition</text>
 
 
 
+
 Some animals were adopted multiple times?</text>
         </g>
         <g
@@ -3558,6 +3573,7 @@ Some animals were adopted multiple times?</text>
                style="font-size:36px;font-family:Calibri;fill:#4f87bb"><v:paragraph
    v:horizAlign="1" />
 <v:tabList />
+
 
 
 
@@ -3671,6 +3687,7 @@ Q&amp;A</text>
                style="font-size:10.00003242px;font-family:Calibri;fill:#4f87bb"><v:paragraph
    v:horizAlign="1" />
 <v:tabList />
+
 
 
 
@@ -3857,6 +3874,7 @@ Tooltip shows further information such as animalType/Breed</text>
                style="font-size:10.00003242px;font-family:Calibri;fill:#4f87bb"><v:paragraph
    v:horizAlign="1" />
 <v:tabList />
+
 
 
 
