@@ -5,6 +5,8 @@ Members:
 
 2) Wenjia Wang
 
+# Rough Ideas[Oct. 7]
+
 Project Planning: Providing visualization for Animal Services Intake Data
 
 Dataset: https://data.lacity.org/A-Well-Run-City/Animal-Services-Intake-Data/8cmr-fbcu
@@ -19,7 +21,7 @@ We can incorporate some visualizations such that:
 
 
 
-# Changes after the group critiques
+# Changes after the group critiques[Oct. 20]
 
 Topic: Visualize Texas Austin Animal Services Intake and Outcome Data
 
