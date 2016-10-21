@@ -22,6 +22,8 @@ We can incorporate some visualizations such that:
 # Changes after the group critiques
 
 Topic: Visualize Texas Austin Animal Services Intake and Outcome Data
+
+
 Target: Shelter officers
 
 # Aim: 
