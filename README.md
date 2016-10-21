@@ -26,7 +26,7 @@ We can incorporate some visualizations such that:
 Topic: Visualize Texas Austin Animal Services Intake and Outcome Data
 
 
-Target: Shelter officers
+Target: Shelter officers, Pet researcher
 
 # Aim: 
 * Investigate the trends of incoming and outgoing animals
