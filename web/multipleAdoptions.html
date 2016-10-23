@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="js/moment.min.js"></script>
+    <style>
+        a:link {
+            text-decoration: inherit;
+            color: inherit;
+            cursor: auto;
+        }
+
+        a:visited {
+            text-decoration: inherit;
+            color: inherit;
+            cursor: auto;
+        }
+        .legend{
+            color: white;
+            border-radius: 10px;
+            border: 1px solid white;
+            text-align: center;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        #calendarView table{
+            width: 1300px;
+            background-color: grey;
+            color: white;
+            border-radius: 15px;
+            #padding: 15px;
+            font-size: 11px;
+        }
+        #calendarView td{
+            border: 1px solid white;
+            text-align: center;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        #calendarView td.corner_row{
+            border: 0px solid white;
+            text-align: center;
+            padding-left: 5px;
+            padding-right: 5px;
+            background-color: white;
+        }
+
+        #calendarView td:hover{
+            background-color: lightgrey;
+            color: black;
+        }
+        .barFillIntake{
+            background-color: red;
+            color: black;
+        }
+        .barFillInterval{
+            background-color: palevioletred;
+        }
+        .barFillOutgoing{
+            background-color: lightgreen;
+            color: black;
+        }
+        .barFillSameday{
+            background-color: dodgerblue;
+        }
+    </style>
+    <!--- helper functions--->
+    <script type="text/javascript">
+
+    </script>
+    <script type="text/javascript">
+        //configuration
+        var weeksPerTable = 55;
+        var configuration = {
+        };
+
+        var minDate = moment("2014-01-01");
+        var maxDate = moment("2016-10-01");
+
+        //adjust minDate to Sunday and maxDate to Saturday
+        minDate.add(-1*(minDate.day()),'day');
+        maxDate.add((6-maxDate.day()),'day');
+
+        var highlightCells = [];
+
+        var dataset;
+
+        d3.csv('data/animalAdoptedMultipleTimes.csv',function(d){
+            dataset = d;
+
+            var countById = d3.nest().key(function(d) {return d['Animal.ID'];} )
+                    .rollup(function(v){return v.length;})
+                    .entries(dataset);
+
+            countById.sort(function(a,b){return a['value'] > b['value'] ? -1 : 1})
+
+            d3.select("#selId").selectAll("option_new")
+                    .data(countById)
+                    .enter()
+                    .append("option")
+                    .text(function(d,i){
+                        var sex;
+                        var animalType;
+                        var breed;
+                        var colour;
+                        for(var i = 0;i<dataset.length;++i){
+                            if(dataset[i]['Animal.ID'] == d.key){
+                                animalType = dataset[i]['Animal.Type.x'];
+                                sex = dataset[i]['Sex.upon.Intake'];
+                                sex = sex.split(" ")[1];
+                                breed = dataset[i]['Breed.x'];
+                                colour = dataset[i]['Color.x']
+                                break;
+                            }
+                        }
+
+                        return d.key + "    (" + d.value + ") \\ " + animalType + " \\ " + sex
+                                + " \\ " + breed + " \\ " + colour;
+                    })
+                    .attr("value",function(d,i){
+                        return d.key;
+                    });
+        });
+
+        function drawCalendarTable(){
+            var divTable = d3.select('#calendarView');
+
+            var numWeeks = (moment.duration(maxDate.diff(minDate)).asDays() + 1 )/7;
+
+            for(var k=0;k<numWeeks/weeksPerTable;++k){
+                divTable.append("br")
+                var calendarTable = divTable.append("table");
+                //draw year labels
+                var tr = calendarTable.append("tr");
+                //skip corner rows
+                tr.append("td")
+                        .classed("corner_row",true)
+                        .text("");
+
+                for(var i = 0;i<weeksPerTable;++i){
+                    var td = tr.append("td");
+                    //get Sat date
+                    var cellDate = minDate.clone().add( 7*k*weeksPerTable + 7*(i+1),'day');
+                    var cellYear = cellDate.format('YYYY');
+                    //get numColSpan
+                    var numColSpan = 1;
+                    while(cellYear == cellDate.add(7,'day').format('YYYY')){
+                        numColSpan += 1;
+                        i += 1;
+                    }
+                    td.text(cellYear)
+                            .attr("colspan",numColSpan);
+                }
+
+                //draw month labels
+                var tr = calendarTable.append("tr");
+                //skip corner rows
+                tr.append("td")
+                        .classed("corner_row",true)
+                        .text("");
+
+                for(var i = 0;i<weeksPerTable;++i){
+                    var td = tr.append("td");
+                    //get Sat date
+                    var cellDate = minDate.clone().add( 7*k*weeksPerTable + 7*(i+1),'day');
+                    var cellMonth = cellDate.format('MMM');
+                    //get numColSpan
+                    var numColSpan = 1;
+                    while(cellMonth == cellDate.add(7,'day').format('MMM')){
+                        numColSpan += 1;
+                        i += 1;
+                    }
+                    td.text(cellMonth)
+                            .attr("colspan",numColSpan);
+                }
+
+                for(var j = 0;j<7;++j){
+                    var tr = calendarTable.append("tr");
+                    var dayOfWeek = "";
+                    switch(j){
+                        case 0:
+                            dayOfWeek = "Sun";
+                            break;
+                        case 1:
+                            dayOfWeek = "Mon";
+                            break;
+                        case 2:
+                            dayOfWeek = "Tue";
+                            break;
+                        case 3:
+                            dayOfWeek = "Wed";
+                            break;
+                        case 4:
+                            dayOfWeek = "Thu";
+                            break;
+                        case 5:
+                            dayOfWeek = "Fri";
+                            break;
+                        case 6:
+                            dayOfWeek = "Sat";
+                            break;
+                    }
+                    tr.append("td")
+                            .style("border","0px")
+                            .text(dayOfWeek);
+
+                    for(var i = 0;i<weeksPerTable;++i){
+                        var cellDate = minDate.clone().add( 7*k*weeksPerTable + 7*i  + j,'day');
+                        var td = tr.append("td");
+                        var dd = cellDate.format('DD');
+                        var mm = cellDate.format('MM');
+                        var yyyy = cellDate.format('YYYY');
+                        var a = td.append("a")
+                        a.text(dd);
+                        a.attr("data-toggle","tooltip")
+                                .attr("href","#")
+                                .attr("title","");
+                        td.attr("id","cv_" + dd + "_" + mm + "_" + yyyy);
+                    }
+                }
+            }
+        }
+
+        function displayCalendarView(animalId){
+            //clear highlight
+            highlightCells.forEach(function(d){
+                d3.select("#"+d)
+                        .classed("barFillSameday",false)
+                        .classed("barFillIntake",false)
+                        .classed("barFillOutgoing",false)
+                        .classed("barFillInterval",false);
+                //remove tooltip
+                fixTooltip("#"+d + " a","")
+            });
+
+            highlightCells = []
+
+            var filterDataset = dataset.filter(function(d){
+                return d['Animal.ID'] == animalId;
+            });
+
+            filterDataset.forEach(function(d,i){
+                var startDate = moment(d['DateTime.x'].split(" ")[0]);
+                var stopDate = moment(d['DateTime.y'].split(" ")[0]);
+                console.log("startDate:" + startDate.format());
+                console.log("stopDate:" + stopDate.format());
+                for(var currentDate = startDate.clone();
+                    currentDate <= stopDate;
+                    currentDate.add(1,'day')
+                ){
+                    var dd = currentDate.format('DD');
+                    var mm = currentDate.format('MM');
+                    var yyyy = currentDate.format('YYYY');
+                    var cellId = "cv_" + dd + "_" + mm + "_" + yyyy;
+                    var classname = "";
+
+                    if(currentDate.format('DD/MM/YYYY') == startDate.format('DD/MM/YYYY')
+                            && currentDate.format('DD/MM/YYYY') == stopDate.format('DD/MM/YYYY')){
+                        classname = "barFillSameday";
+                    }else if(currentDate.format('DD/MM/YYYY')==startDate.format('DD/MM/YYYY')){
+                        classname = "barFillIntake";
+                    }else if(currentDate.format('DD/MM/YYYY') == stopDate.format('DD/MM/YYYY')){
+                        classname = "barFillOutgoing";
+                    }else{
+                        classname = "barFillInterval";
+                    }
+                    d3.select("#" + cellId)
+                            .classed(classname,true);
+
+                    //add tooltip
+                    if(classname == "barFillIntake"){
+                        fixTooltip("#"+cellId + " a",d['Intake.Type']);
+                    }else if(classname == "barFillOutgoing"){
+                        fixTooltip("#"+cellId + " a",d['Outcome.Type']);
+                    }else if(classname == "barFillSameday"){
+                        fixTooltip("#"+cellId + " a",d['Intake.Type'] + "  /  " + d['Outcome.Type']);
+                    }
+
+                    highlightCells.push(cellId);
+                }
+
+            });
+
+            //show all tooltips if ticked
+            if(document.getElementById('showAllTooltips').checked){
+                //timeout -> fix old tooltips immediately disappeared(?)
+                setTimeout(function(){showAllTooltips()},300);
+            }
+
+        }
+
+        function fixTooltip(selector,newTooltip){
+            $(selector).tooltip('hide')
+                    .attr('data-original-title', newTooltip)
+                    .tooltip('fixTitle');
+        }
+
+        function showAllTooltips(){
+            highlightCells.forEach(function(cellId){
+                $("#"+cellId+" a").tooltip("show");
+            });
+        }
+        function hideAllTooltips(){
+            highlightCells.forEach(function(cellId){
+                $("#"+cellId+" a").tooltip('hide');
+            });
+        }
+        function switchTooltipShow(){
+            if(document.getElementById('showAllTooltips').checked){
+                showAllTooltips();
+            }else{
+                hideAllTooltips();
+            }
+        }
+    </script>
+    <!--- scripts belong to HTML --->
+    <script type="text/javascript">
+        function selectAnimalId(){
+            var animalId = document.getElementById('selId').value;
+            if(animalId == "None")return;
+            console.log("select animalId:" + animalId)
+            displayCalendarView(animalId);
+        }
+    </script>
+</head>
+<body>
+    <label>Select AnimalId:</label>
+    <div class="form-group">
+    <select class="form-control" id="selId" onchange="selectAnimalId()">
+        <option value="None">--select--</option>
+    </select>
+    </div>
+    <!--<svg id="calendarView" width="100%"></svg>-->
+    <center>
+        <div id="calendarView" width="90%">
+
+        </div>
+        <br/>
+        <table>
+            <tr>
+                <td class = "legend barFillIntake">Intake</td>
+                <td>&nbsp;&nbsp;&nbsp;</td>
+                <td class = "legend barFillInterval">Staying</td>
+                <td>&nbsp;&nbsp;&nbsp;</td>
+                <td class = "legend barFillOutgoing">Leave</td>
+                <td>&nbsp;&nbsp;&nbsp;</td>
+                <td class = "legend barFillSameday">Intake/Leave same day</td>
+                <td>&nbsp;&nbsp;&nbsp;</td>
+                <td><label><input type="checkbox" id="showAllTooltips" onchange="switchTooltipShow()" >showAllTooltips</label></td>
+            </tr>
+        </table>
+    </center>
+    <script type="text/javascript">
+        drawCalendarTable();
+        //enable tooltip
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+data/Austin_Animal_Center_Intakes.csv
+data/Austin_Animal_Center_Outcomes.csv
+python/api.key
+python/keys
+python/mapLatLng.new.csv
+python/errorLocations.new.csv
+R/.Rhistory
+web/.idea/*
+.vscode/*
