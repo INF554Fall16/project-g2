@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OverviewTrend</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="js/moment.min.js"></script>
+    <!-- tooltip -->
+    <script src="js/d3-tip.js"></script>
+    <link rel="stylesheet" href="css/d3-tip.css">
+    <style>
+        .line {
+            fill: none;
+            stroke-width: 2px;
+        }
+
+        .center {
+            stroke-dasharray: 5,5;
+        }
+
+        .axis{
+            font-weight: bold;
+            font-size: 15px;
+        }
+    </style>
+    <script type="text/javascript">
+        var configuration = {
+            'graph_width': 1200,
+            'graph_height': 350,
+            'left_margin': 150,
+            'top_margin': 100,
+            'axis_horizontal_margin': 40,
+            'axis_vertical_margin': 40,
+            'axis_label_margin':10,
+            'circle_radius': 5,
+            'circle_radius_focus': 13,
+            'opacity_lost_focus': 0.1
+        };
+
+        var incomingData;
+        var outgoingData;
+        var xScale;
+        var yScalePositive;
+        var yScaleNegative;
+
+        var colorFiller = d3.scaleOrdinal(d3.schemeCategory10);
+        var animalTypes = [];
+        var animalColorDict = {};
+
+        var timeParser = d3.timeParse("%d/%m/%Y");
+
+        var timeSerieSvg;
+        var groupG;
+        var tooltipPositive;
+        var tooltipNegative;
+        var tooltipCenter;
+
+        d3.queue()
+                .defer(d3.csv,'data/incomingOverview.csv')
+                .defer(d3.csv,'data/outgoingOverview.csv')
+                .await(function(error,incoming,outgoing){
+                    incomingData = incoming;
+                    outgoingData = outgoing;
+
+                    //prepare data
+                    incomingData.forEach(function(d){
+                            d['dmy'] =  timeParser(d['dmy']);
+                            d['count'] = +d['count'];
+                    });
+                    incomingData.sort(function(d1,d2){
+                        if(d1['dmy'] < d2['dmy']){
+                            return -1;
+                        }else if(d2['dmy'] < d1['dmy']){
+                            return 1;
+                        }
+                        return 0;
+                    });
+
+                    outgoingData.forEach(function(d){
+                        d['dmy'] =  timeParser(d['dmy']);
+                        d['count'] = +d['count'];
+                    });
+                    outgoingData.sort(function(d1,d2){
+                        if(d1['dmy'] < d2['dmy']){
+                            return -1;
+                        }else if(d2['dmy'] < d1['dmy']){
+                            return 1;
+                        }
+                        return 0;
+                    });
+
+                    animalTypes = d3.map(incomingData,function(d){return d['animalType']}).keys();
+                    animalTypes.forEach(function(d,i){
+                        animalColorDict[d] = i;
+                    });
+
+                    xScale = d3.scaleTime()
+                            .domain(d3.extent(incomingData,function(d){return d['dmy'];}))
+                            .rangeRound([0,configuration['graph_width']]);
+
+                    //prepare tooltips
+                    timeSerieSvg = d3.select("#timeSerieChart");
+                    var textDisplay = function(d){
+                        var count = d['count'];
+                        var jsDate = d['dmy'];
+                        var month = moment().day(jsDate.getDate()).month(jsDate.getMonth()).year(jsDate.getFullYear()).format('MMM');
+                        return month + ":   " + count;
+                    }
+                    tooltipPositive = d3.tip().attr('class', 'd3-tip').direction('e').html(function(d) { return textDisplay(d); });
+                    tooltipNegative = d3.tip().attr('class', 'd3-tip').direction('e').html(function(d) { return textDisplay(d); });
+                    tooltipCenter = d3.tip().attr('class', 'd3-tip').direction('w').html(function(d) { return textDisplay(d); });
+
+                    timeSerieSvg.call(tooltipPositive);
+                    timeSerieSvg.call(tooltipNegative);
+                    timeSerieSvg.call(tooltipCenter);
+
+
+                    //draw charts
+                    groupG = timeSerieSvg.append("g");
+                    drawMultiLines(incomingData,outgoingData);
+                });
+
+        function drawMultiLines(incoming,outgoing){
+
+            var maxIncoming = d3.max(incoming,function(d){return d['count']});
+            var maxOutgoing = d3.max(outgoing,function(d){return d['count']});
+            var maxNumber = Math.max(maxIncoming,maxOutgoing);
+
+            yScalePositive = d3.scaleLinear()
+                    .domain([0,maxNumber])
+                    .rangeRound([configuration['graph_height'],0]);
+
+            yScaleNegative = d3.scaleLinear()
+                    .domain([0,maxNumber])
+                    .rangeRound([configuration['graph_height'],2*configuration['graph_height']]);
+
+            drawUpperOrLowerChart(xScale,yScalePositive,incoming,"positive");
+            drawUpperOrLowerChart(xScale,yScaleNegative,outgoing,"negative");
+            drawCenterChart(xScale,yScalePositive,yScaleNegative,incoming,outgoing,"center");
+            drawAxises(xScale,yScalePositive,yScaleNegative);
+
+            groupG.attr("transform", "translate(" + configuration['left_margin'] + "," + configuration['top_margin'] + ")");
+        }
+
+        function drawAxises(xScale,yScalePositive,yScaleNegative){
+            //x-axis bottom
+            groupG.append("g")
+                    .classed("axis",true)
+                    .attr("transform","translate(0," + (2*configuration['graph_height'] + configuration['axis_horizontal_margin']) + ")")
+                    .call(d3.axisBottom(xScale));
+            //x-axis top
+            groupG.append("g")
+                    .classed("axis",true)
+                    .attr("transform","translate(0,"+(-configuration['axis_horizontal_margin'])+")")
+                    .call(d3.axisTop(xScale));
+
+            //y-axis positive
+            groupG.append("g")
+                    .classed("axis",true)
+                    .attr("transform","translate("+(-configuration['axis_vertical_margin'])+",0)")
+                    .call(d3.axisLeft(yScalePositive))
+                    .append("text")
+                    .attr("y",-(configuration['axis_vertical_margin']+configuration['axis_label_margin']))
+                    .attr("x",-configuration['graph_height']/2)
+                    .attr("text-anchor","middle")
+                    .attr("fill","black")
+                    .attr("transform","rotate(-90)")
+                    .text("#  Incoming")
+
+            //y-axis negative
+            groupG.append("g")
+                    .classed("axis",true)
+                    .attr("transform","translate("+(configuration['graph_width'] + configuration['axis_vertical_margin'])+",0)")
+                    .call(d3.axisRight(yScaleNegative))
+                    .append("text")
+                    .attr("y",-(configuration['axis_vertical_margin']+configuration['axis_label_margin']))
+                    .attr("x", 3*configuration['graph_height']/2)
+                    .attr("text-anchor","middle")
+                    .attr("fill","black")
+                    .attr("transform","rotate(+90)")
+                    .text("#  Outgoing")
+
+        }
+
+        function drawCenterChart(xScale,yScalePositive,yScaleNegative,incoming,outgoing,chartPosition){
+            var yScaleCenter = function(d){
+                if(d > 0){
+                    return yScalePositive(d);
+                }
+                return yScaleNegative(-d);
+            };
+            var lineShaper = d3.line()
+                    .x(function (d) {
+                        return xScale(d['dmy'])
+                    })
+                    .y(function (d) {
+                        return yScaleCenter(d['count']);
+                    });
+
+            for(var i = 0;i<animalTypes.length;++i){
+                var animalType = animalTypes[i];
+
+                var subdataIncoming = incoming.filter(function (d) {
+                    return d["animalType"] == animalType;
+                });
+
+                var subdataOutgoing = outgoing.filter(function (d) {
+                    return d["animalType"] == animalType;
+                });
+
+                var subdata = [];
+                var balance = 0;
+                subdataIncoming.forEach(function(d,i){
+                    var dmy = d['dmy'];
+                    balance = balance + subdataIncoming[i]['count'] - subdataOutgoing[i]['count'];
+                    subdata.push({'dmy':dmy,'count':balance});
+                });
+
+                var g = groupG.append("g");
+                drawLineAndPoints(g,subdata,xScale,yScaleCenter,lineShaper,animalType,chartPosition);
+            }
+        }
+
+        function drawUpperOrLowerChart(xScale,yScale,dataset,chartPosition){
+            var lineShaper = d3.line()
+                    .x(function (d) {
+                        return xScale(d['dmy'])
+                    })
+                    .y(function (d) {
+                        return yScale(d['count'])
+                    });
+
+            for(var i = 0;i<animalTypes.length;++i){
+                var animalType = animalTypes[i];
+
+                var subdata = dataset.filter(function (d) {
+                    return d["animalType"] == animalType;
+                });
+
+                var g = groupG.append("g");
+
+                drawLineAndPoints(g,subdata,xScale,yScale,lineShaper,animalType,chartPosition);
+
+            }
+        }
+
+        function drawLineAndPoints(g,subdata,xScale,yScale,lineShaper,animalType,chartPosition){
+            //draw lines
+            g.append("path")
+                    .datum(subdata)
+                    .attr("class", "line")
+                    .classed(chartPosition,true)
+                    .classed("animal_"+animalType,true)
+                    .attr("stroke",function(d){
+                        return colorFiller(animalColorDict[animalType]);
+                    })
+                    .attr("d", lineShaper);
+            //draw points
+            g.selectAll("circle")
+                    .data(subdata)
+                    .enter()
+                    .append("circle")
+                    .attr("cx",function(d){return xScale(d['dmy'])})
+                    .attr("cy",function(d){return yScale(d['count'])})
+                    .attr("fill",function(d){return colorFiller(animalColorDict[animalType])})
+                    .attr("r",configuration['circle_radius'])
+                    .attr("id",function(d,i){
+                        return animalType + "_" + chartPosition + "_" + i;
+                    })
+                    .classed("animal_"+animalType,true)
+                    .on("mouseover",function(d,i){
+                        d3.select("circle#" + animalType + "_positive_" + i)
+                                .attr("r",configuration['circle_radius_focus']);
+                        d3.select("circle#" + animalType + "_negative_" + i)
+                                .attr("r",configuration['circle_radius_focus']);
+                        d3.select("circle#" + animalType + "_center_" + i)
+                                .attr("r",configuration['circle_radius_focus']);
+
+                        tooltipPositive.show(d3.select("circle#" + animalType + "_positive_" + i).data()[0],document.getElementById(animalType + "_positive_" + i));
+                        tooltipNegative.show(d3.select("circle#" + animalType + "_negative_" + i).data()[0],document.getElementById(animalType + "_negative_" + i));
+                        tooltipCenter.show(d3.select("circle#" + animalType + "_center_" + i).data()[0],document.getElementById(animalType + "_center_" + i));
+
+                        animalTypes.forEach(function(type){
+                            if(type != animalType){
+                                d3.selectAll(".animal_" + type)
+                                        .attr("opacity",configuration['opacity_lost_focus']);
+                            }
+                        });
+                    })
+                    .on("mouseout",function(d,i){
+                            d3.select("circle#" + animalType + "_positive_" + i)
+                                    .attr("r",configuration['circle_radius']);
+                            d3.select("circle#" + animalType + "_negative_" + i)
+                                    .attr("r",configuration['circle_radius']);
+                            d3.select("circle#" + animalType + "_center_" + i)
+                                    .attr("r",configuration['circle_radius']);
+
+                            tooltipPositive.hide();
+                            tooltipNegative.hide();
+                            tooltipCenter.hide();
+
+                            animalTypes.forEach(function(type){
+                                d3.selectAll(".animal_" + type)
+                                        .attr("opacity",1.0);
+                            });
+
+                    });
+        }
+    </script>
+</head>
+<body>
+    <svg id="timeSerieChart" width="100%" height="1500px">
+
+    </svg>
+</body>
+</html>
