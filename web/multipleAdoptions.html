@@ -7,6 +7,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="js/moment.min.js"></script>
+    <!--leaflet-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+    <!--leaflet extra markers-->
+    <link rel="stylesheet" href="css/leaflet.extra-markers.min.css">
+    <script src="js/leaflet.extra-markers.min.js"></script>
     <style>
         a:link {
             text-decoration: inherit;
@@ -28,7 +34,7 @@
             padding-right: 15px;
         }
         #calendarView table{
-            width: 1300px;
+            #width: 1300px;
             background-color: grey;
             color: white;
             border-radius: 15px;
@@ -38,15 +44,15 @@
         #calendarView td{
             border: 1px solid white;
             text-align: center;
-            padding-left: 5px;
-            padding-right: 5px;
+            padding-left: 2px;
+            padding-right: 2px;
         }
 
         #calendarView td.corner_row{
             border: 0px solid white;
             text-align: center;
-            padding-left: 5px;
-            padding-right: 5px;
+            padding-left: 2px;
+            padding-right: 2px;
             background-color: white;
         }
 
@@ -68,6 +74,10 @@
         .barFillSameday{
             background-color: dodgerblue;
         }
+        #locationMap{
+            width: 95%;
+            height: 420px;
+        }
     </style>
     <!--- helper functions--->
     <script type="text/javascript">
@@ -75,9 +85,20 @@
     </script>
     <script type="text/javascript">
         //configuration
-        var weeksPerTable = 55;
         var configuration = {
+            //initially, the map centered on Austin (TX)
+            initLat: 30.267153,
+            initLong: -97.7430608,
+            mapZoom: 11
         };
+
+        //weeksPerTable dynamically adjusted based on page's width
+        var pageWidth = $(window).width();
+        var weeksPerTable = parseInt(0.7 * pageWidth / 17);
+
+        //for a map
+        var locationMap;
+        var locationMarkerGroup;
 
         var minDate = moment("2014-01-01");
         var maxDate = moment("2016-10-01");
@@ -235,7 +256,9 @@
                         .classed("barFillOutgoing",false)
                         .classed("barFillInterval",false);
                 //remove tooltip
-                fixTooltip("#"+d + " a","")
+                fixTooltip("#"+d + " a","");
+                //clear location tracking
+                clearLocationTracker("#"+d + " a");
             });
 
             highlightCells = []
@@ -281,6 +304,13 @@
                         fixTooltip("#"+cellId + " a",d['Intake.Type'] + "  /  " + d['Outcome.Type']);
                     }
 
+                    //add location tracking
+                    if(classname == "barFillIntake" || classname == "barFillSameday"){
+                        var lat = d['lat'];
+                        var lng = d['lng'];
+                        addLocationTracker("#"+cellId + " a",lat,lng,i);
+                    }
+
                     highlightCells.push(cellId);
                 }
 
@@ -292,12 +322,62 @@
                 setTimeout(function(){showAllTooltips()},300);
             }
 
+            //update map markers
+            //clear markers
+            locationMarkerGroup.clearLayers();
+
+            var sumLat = 0;
+            var sumLong = 0;
+            filterDataset.forEach(function(d,i){
+                var lat = parseFloat(d['lat']);
+                var lng = parseFloat(d['lng']);
+
+                sumLat += lat;
+                sumLong += lng;
+                //add a marker
+                var numMarker = L.ExtraMarkers.icon({
+                    icon: 'fa-number',
+                    number: i+1,
+                    markerColor: 'red'
+                });
+                L.marker([lat,lng], {icon: numMarker}).addTo(locationMarkerGroup);
+            });
+            var meanLat = sumLat/filterDataset.length;
+            var meanLong = sumLong/filterDataset.length;
+            //re-center
+            locationMap.setZoom(configuration['mapZoom'],{animate: false});
+            locationMap.panTo(new L.LatLng(meanLat, meanLong));
+
         }
 
         function fixTooltip(selector,newTooltip){
             $(selector).tooltip('hide')
                     .attr('data-original-title', newTooltip)
                     .tooltip('fixTitle');
+        }
+
+        function addLocationTracker(selector,lat,lng,i){
+            $(selector).click(function(){
+                //pan to that location
+                locationMap.panTo(new L.LatLng(parseFloat(lat), parseFloat(lng)));
+                //bring the marker on top
+                var markers = locationMarkerGroup.getLayers();
+                markers.forEach(function(marker,index){
+                    if(index!=i){
+                        marker.setZIndexOffset(0);
+                    }else{
+                        marker.setZIndexOffset(100);
+                    }
+                });
+            });
+            $(selector).on('click');
+        }
+
+        function clearLocationTracker(selector){
+            $(selector).click(function(){
+                return false;
+            });
+            $(selector).off('click');
         }
 
         function showAllTooltips(){
@@ -316,6 +396,15 @@
             }else{
                 hideAllTooltips();
             }
+        }
+        function drawLocationMap(){
+            //initially, center on Austin (TX)
+            locationMap = L.map('locationMap').setView([configuration['initLat'],configuration['initLong']],configuration['mapZoom']);
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(locationMap);
+
+            locationMarkerGroup = L.layerGroup().addTo(locationMap);
         }
     </script>
     <!--- scripts belong to HTML --->
@@ -336,27 +425,40 @@
     </select>
     </div>
     <!--<svg id="calendarView" width="100%"></svg>-->
-    <center>
-        <div id="calendarView" width="90%">
+        <table width="100%">
+            <tr><td width="70%">
+                <center>
+                <div id="calendarView">
 
-        </div>
-        <br/>
-        <table>
-            <tr>
-                <td class = "legend barFillIntake">Intake</td>
-                <td>&nbsp;&nbsp;&nbsp;</td>
-                <td class = "legend barFillInterval">Staying</td>
-                <td>&nbsp;&nbsp;&nbsp;</td>
-                <td class = "legend barFillOutgoing">Leave</td>
-                <td>&nbsp;&nbsp;&nbsp;</td>
-                <td class = "legend barFillSameday">Intake/Leave same day</td>
-                <td>&nbsp;&nbsp;&nbsp;</td>
-                <td><label><input type="checkbox" id="showAllTooltips" onchange="switchTooltipShow()" >showAllTooltips</label></td>
+                </div>
+                <br/>
+                    <table>
+                        <tr>
+                            <td class = "legend barFillIntake">Intake</td>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td class = "legend barFillInterval">Staying</td>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td class = "legend barFillOutgoing">Leave</td>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td class = "legend barFillSameday">Intake/Leave same day</td>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td><label><input type="checkbox" id="showAllTooltips" onchange="switchTooltipShow()" >showAllTooltips</label></td>
+                        </tr>
+                    </table>
+                </center>
+            </td>
+            <td width="30%">
+                <center>
+                <div id="locationMap">
+                </div>
+                </center>
+            </td>
             </tr>
         </table>
-    </center>
+
     <script type="text/javascript">
         drawCalendarTable();
+        drawLocationMap();
         //enable tooltip
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip();
