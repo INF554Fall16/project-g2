@@ -8,3 +8,4 @@ python/errorLocations.new.csv
 R/.Rhistory
 web/.idea/*
 .vscode/*
+.idea/*
