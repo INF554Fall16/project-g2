@@ -28,20 +28,27 @@
     </style>
     <script type="text/javascript">
         var configuration = {
-            'graph_width': 1200,
+            'graph_width': 900,
             'graph_height': 350,
             'left_margin': 150,
             'top_margin': 100,
             'axis_horizontal_margin': 40,
             'axis_vertical_margin': 40,
-            'axis_label_margin':10,
+            'axis_label_margin':20,
             'circle_radius': 5,
             'circle_radius_focus': 13,
-            'opacity_lost_focus': 0.1
+            'opacity_lost_focus': 0.1,
+            'animation_duration': 1000,
+            'legend_left_margin_from_chart': 100,
+            'legend_radius': 10,
+            'legend_top_margin': 5,
+            'legend_line_length': 100
         };
 
         var incomingData;
         var outgoingData;
+        var incomingAllData = [];
+        var outgoingAllData = [];
         var xScale;
         var yScalePositive;
         var yScaleNegative;
@@ -51,6 +58,7 @@
         var animalColorDict = {};
 
         var timeParser = d3.timeParse("%d/%m/%Y");
+        var timeFormatter = d3.timeFormat("%d/%m/%Y");
 
         var timeSerieSvg;
         var groupG;
@@ -58,6 +66,7 @@
         var tooltipNegative;
         var tooltipCenter;
 
+        var debug;
         d3.queue()
                 .defer(d3.csv,'data/incomingOverview.csv')
                 .defer(d3.csv,'data/outgoingOverview.csv')
@@ -65,38 +74,66 @@
                     incomingData = incoming;
                     outgoingData = outgoing;
 
-                    //prepare data
-                    incomingData.forEach(function(d){
-                            d['dmy'] =  timeParser(d['dmy']);
-                            d['count'] = +d['count'];
-                    });
-                    incomingData.sort(function(d1,d2){
+                    /*-----prepare data-----*/
+                    var sortByDateFn = function(d1,d2){
                         if(d1['dmy'] < d2['dmy']){
                             return -1;
                         }else if(d2['dmy'] < d1['dmy']){
                             return 1;
                         }
                         return 0;
+                    };
+
+                    incomingData.forEach(function(d){
+                            d['dmy'] =  timeParser(d['dmy']);
+                            d['count'] = +d['count'];
                     });
+                    incomingData.sort(sortByDateFn);
 
                     outgoingData.forEach(function(d){
                         d['dmy'] =  timeParser(d['dmy']);
                         d['count'] = +d['count'];
                     });
-                    outgoingData.sort(function(d1,d2){
-                        if(d1['dmy'] < d2['dmy']){
-                            return -1;
-                        }else if(d2['dmy'] < d1['dmy']){
-                            return 1;
-                        }
-                        return 0;
+                    outgoingData.sort(sortByDateFn);
+
+                    /*-----prepare aggregated data-----*/
+                    var groupByDate = d3.nest()
+                            .key(function(d){return timeFormatter(d['dmy']);})
+                            .rollup(function(v){return d3.sum(v,function(d){return d['count']})})
+                            .entries(incomingData);
+
+                    groupByDate.forEach(function(d){
+                        var dmy = timeParser(d['key']);
+                        var count = d['value'];
+                        var animalType = "All";
+                        incomingAllData.push({'dmy': dmy, 'count': count, 'animalType': animalType});
                     });
 
+                    groupByDate = d3.nest()
+                            .key(function(d){return timeFormatter(d['dmy']);})
+                            .rollup(function(v){return d3.sum(v,function(d){return d['count']})})
+                            .entries(outgoingData);
+
+                    groupByDate.forEach(function(d){
+                        var dmy = timeParser(d['key']);
+                        var count = d['value'];
+                        var animalType = "All";
+                        outgoingAllData.push({'dmy': dmy, 'count': count, 'animalType': animalType});
+                    });
+
+                    incomingAllData.sort(sortByDateFn);
+                    outgoingAllData.sort(sortByDateFn);
+                    /*----------*/
+
                     animalTypes = d3.map(incomingData,function(d){return d['animalType']}).keys();
+                    animalTypes.push("All");
+
+                    //prepare color mapper
                     animalTypes.forEach(function(d,i){
                         animalColorDict[d] = i;
                     });
 
+                    //xScale will be constant
                     xScale = d3.scaleTime()
                             .domain(d3.extent(incomingData,function(d){return d['dmy'];}))
                             .rangeRound([0,configuration['graph_width']]);
@@ -120,8 +157,70 @@
 
                     //draw charts
                     groupG = timeSerieSvg.append("g");
-                    drawMultiLines(incomingData,outgoingData);
+                    //chart is initially aggregated
+                    drawMultiLines(incomingAllData,outgoingAllData);
+
+                    drawAxises(xScale,yScalePositive,yScaleNegative);
+                    drawLegends();
+                    groupG.attr("transform", "translate(" + configuration['left_margin'] + "," + configuration['top_margin'] + ")");
                 });
+
+        function drawLegends(){
+            var legendGroup = groupG.append("g");
+            legendGroup.selectAll("circle.legends")
+                    .data(animalTypes)
+                    .enter()
+                    .append("circle")
+                    .attr("cx",0)
+                    .attr("cy",function(d,i){
+                        return i*(2*configuration['legend_radius'] + configuration['legend_top_margin'])
+                    })
+                    .attr('r',configuration['legend_radius'])
+                    .attr('fill',function(d){return colorFiller(animalColorDict[d]);});
+            legendGroup.selectAll("text.legends_animal")
+                    .data(animalTypes)
+                    .enter()
+                    .append("text")
+                    .attr("alignment-baseline","middle")
+                    .attr("x",configuration['legend_radius']+5)
+                    .attr("y",function(d,i){
+                        return i*(2*configuration['legend_radius'] + configuration['legend_top_margin'])
+                    })
+                    .text(function(d){return d;})
+
+            var topMargin = animalTypes.length*(2*configuration['legend_radius'] + configuration['legend_top_margin']);
+            topMargin += 9*configuration['legend_top_margin'];
+
+            var lineData = ["Incoming/Outgoing","Balance"];
+            legendGroup.selectAll("line.legends")
+                    .data(lineData)
+                    .enter()
+                    .append("line")
+                    .attr("stroke-width",3)
+                    .attr("x1",0)
+                    .attr("x2",configuration['legend_line_length'])
+                    .attr("y1",function(d,i){
+                        return topMargin + 6*i*(configuration['legend_top_margin'])
+                    })
+                    .attr("y2",function(d,i){
+                        return topMargin + 6*i*(configuration['legend_top_margin'])
+                    })
+                    .classed("center",function(d){return d=="Balance";})
+                    .attr('stroke',"black");
+            legendGroup.selectAll("text.legends_agg")
+                    .data(lineData)
+                    .enter()
+                    .append("text")
+                    .attr("alignment-baseline","baseline")
+                    .attr("text-anchor","middle")
+                    .attr("x",configuration['legend_line_length']/2)
+                    .attr("y",function(d,i){
+                        return topMargin + (6*i*(configuration['legend_top_margin']) - 6)
+                    })
+                    .text(function(d){return d;})
+
+            legendGroup.attr("transform","translate("+(configuration['graph_width'] + configuration['legend_left_margin_from_chart'])+",0)")
+        }
 
         function drawMultiLines(incoming,outgoing){
 
@@ -140,9 +239,11 @@
             drawUpperOrLowerChart(xScale,yScalePositive,incoming,"positive");
             drawUpperOrLowerChart(xScale,yScaleNegative,outgoing,"negative");
             drawCenterChart(xScale,yScalePositive,yScaleNegative,incoming,outgoing,"center");
-            drawAxises(xScale,yScalePositive,yScaleNegative);
 
-            groupG.attr("transform", "translate(" + configuration['left_margin'] + "," + configuration['top_margin'] + ")");
+            d3.selectAll(".line_and_point")
+                    .transition()
+                    .duration(configuration['animation_duration'])
+                    .attr("opacity",1.0);
         }
 
         function drawAxises(xScale,yScalePositive,yScaleNegative){
@@ -160,6 +261,7 @@
             //y-axis positive
             groupG.append("g")
                     .classed("axis",true)
+                    .attr("id","yAxisPositive")
                     .attr("transform","translate("+(-configuration['axis_vertical_margin'])+",0)")
                     .call(d3.axisLeft(yScalePositive))
                     .append("text")
@@ -173,6 +275,7 @@
             //y-axis negative
             groupG.append("g")
                     .classed("axis",true)
+                    .attr("id","yAxisNegative")
                     .attr("transform","translate("+(configuration['graph_width'] + configuration['axis_vertical_margin'])+",0)")
                     .call(d3.axisRight(yScaleNegative))
                     .append("text")
@@ -183,6 +286,18 @@
                     .attr("transform","rotate(+90)")
                     .text("#  Outgoing")
 
+        }
+
+        function updateYAxises(yScalePositive,yScaleNegative){
+            d3.select("#yAxisPositive")
+                    .transition()
+                    .duration(configuration['animation_duration'])
+                    .call(d3.axisLeft(yScalePositive));
+
+            d3.select("#yAxisNegative")
+                    .transition()
+                    .duration(configuration['animation_duration'])
+                    .call(d3.axisRight(yScaleNegative));
         }
 
         function drawCenterChart(xScale,yScalePositive,yScaleNegative,incoming,outgoing,chartPosition){
@@ -248,6 +363,9 @@
         }
 
         function drawLineAndPoints(g,subdata,xScale,yScale,lineShaper,animalType,chartPosition){
+            //class of all line+point is line_and_point
+            g.attr("class","line_and_point")
+                    .attr("opacity",0.0);
             //draw lines
             g.append("path")
                     .datum(subdata)
@@ -309,11 +427,43 @@
 
                     });
         }
+
+        function switchCheck(isAgg){
+            //clear the current lines and points
+            //switch line_and_point -> vanishing class so that animations don't interfere with each other!!
+            d3.selectAll(".line_and_point")
+                    .classed("vanishing",true)
+                    .classed("line_and_point",false);
+
+            d3.selectAll(".vanishing")
+                    .transition()
+                    .duration(configuration['animation_duration'])
+                    .attr("opacity",0.0)
+                    .remove();
+
+            if(isAgg){
+                drawMultiLines(incomingAllData,outgoingAllData);
+            }else{
+                drawMultiLines(incomingData,outgoingData);
+            }
+
+            updateYAxises(yScalePositive,yScaleNegative);
+        }
     </script>
 </head>
 <body>
-    <svg id="timeSerieChart" width="100%" height="1500px">
+    <div style="text-align: center">
+        <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-primary active">
+                <input type="radio" name="isAgg" autocomplete="off" onchange="switchCheck(true)"> Aggregate
+            </label>
+            <label class="btn btn-primary">
+                <input type="radio" name="isAgg" autocomplete="off" onchange="switchCheck(false)"> All Animals
+            </label>
+        </div>
+        <svg id="timeSerieChart" width="100%" height="900px">
 
-    </svg>
+        </svg>
+    </div>
 </body>
 </html>
