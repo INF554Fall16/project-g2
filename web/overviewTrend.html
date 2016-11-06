@@ -11,6 +11,7 @@
     <!-- tooltip -->
     <script src="js/d3-tip.js"></script>
     <link rel="stylesheet" href="css/d3-tip.css">
+    <script src="js/main_lib.js"></script>
     <style>
         .line {
             fill: none;
@@ -53,9 +54,12 @@
         var yScalePositive;
         var yScaleNegative;
 
+        /*
+        // delegate to js/main_lib.js
         var colorFiller = d3.scaleOrdinal(d3.schemeCategory10);
         var animalTypes = [];
         var animalColorDict = {};
+        */
 
         var timeParser = d3.timeParse("%d/%m/%Y");
         var timeFormatter = d3.timeFormat("%d/%m/%Y");
@@ -124,15 +128,6 @@
                     incomingAllData.sort(sortByDateFn);
                     outgoingAllData.sort(sortByDateFn);
                     /*----------*/
-
-                    animalTypes = d3.map(incomingData,function(d){return d['animalType']}).keys();
-                    animalTypes.push("All");
-
-                    //prepare color mapper
-                    animalTypes.forEach(function(d,i){
-                        animalColorDict[d] = i;
-                    });
-
                     //xScale will be constant
                     xScale = d3.scaleTime()
                             .domain(d3.extent(incomingData,function(d){return d['dmy'];}))
