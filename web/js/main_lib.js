@@ -1,5 +1,5 @@
 //define color for each animal
-var colorFiller = d3.scaleOrdinal(d3.schemeCategory10);
+var colorFiller = d3.scaleOrdinal(d3.schemeCategory10).domain(d3.range(6));
 var animalTypes = ["Cat","Dog","Livestock","Bird","Other","All"];
 var animalColorDict = {
     "Cat": 0,
