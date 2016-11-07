@@ -28,50 +28,68 @@ ggplot(joinDf[which(joinDf$diffTime <= 23),],aes(x=diffTime)) +
     scale_y_continuous(labels = scales::percent) +
     facet_grid(Animal.Type.x ~ Outcome.Type)
 
-#transform age to numeric(#months)
-transformToMonths <- function(x){
+#transform age to numeric(#years)
+transformToYears <- function(x){
     strTemp = strsplit(x,"\\s+")[[1]]
     numValue = as.numeric(strTemp[1])
+    if(numValue == 0){
+        numValue = 1
+    }
     unitValue = strTemp[2]
     if(str_detect(unitValue,"year") ){
-        return(12 * numValue)
-    }else if(str_detect(unitValue,"month")){
         return(numValue)
+    }else if(str_detect(unitValue,"month")){
+        return(1)
     }
-    return(0)
+    return(1)
 }
 
-joinDf$monthsUponIntake = as.numeric(sapply(joinDf$Age.upon.Intake,transformToMonths))
+joinDf$age = as.numeric(sapply(joinDf$Age.upon.Intake,transformToYears))
 
 #=====
+
+# The time it takes(days) for dog/cat until their owners took them back VS. animalAge(years) upon intake
+
 showDf = joinDf %>% filter(Outcome.Type == "Return to Owner")
 
-ggplot(showDf,aes(monthsUponIntake,diffTime)) + 
+ggplot(showDf,aes(age,diffTime)) + 
     geom_point() + 
     facet_grid(Animal.Type.x ~ .)
 
-intakeAgeDiffDf = showDf %>% group_by(monthsUponIntake,Animal.Type.x) %>% 
-    summarise(medianDiffTime = median(diffTime))
+intakeAgeDiffDf = showDf %>% group_by(age,Animal.Type.x) %>% 
+    summarise(medianDiffTime = median(diffTime),count=n())
 
-ggplot(intakeAgeDiffDf,aes(monthsUponIntake,medianDiffTime)) + 
+ggplot(intakeAgeDiffDf,aes(age,medianDiffTime)) + 
     geom_line() + 
     facet_grid(Animal.Type.x ~ .)
 
+colnames(intakeAgeDiffDf) = c("age","animalType","stayDuration","count")
+write.csv(intakeAgeDiffDf,"../web/data/dog_cat_stay_vs_age_return_to_owner.csv",row.names = FALSE)
+
 #=====
+
+# The time it takes(days) for dog/cat until they got adopted VS. animalAge(years) upon intake
+
 showDf = joinDf %>% filter(Outcome.Type == "Adoption")
 
-ggplot(showDf,aes(monthsUponIntake,diffTime)) + 
+ggplot(showDf,aes(age,diffTime)) + 
     geom_point() + 
     facet_grid(Animal.Type.x ~ .)
 
-intakeAgeDiffDf = showDf %>% group_by(monthsUponIntake,Animal.Type.x) %>% 
-    summarise(medianDiffTime = median(diffTime))
+intakeAgeDiffDf = showDf %>% group_by(age,Animal.Type.x) %>% 
+    summarise(medianDiffTime = median(diffTime),count=n())
 
-ggplot(intakeAgeDiffDf,aes(monthsUponIntake,medianDiffTime)) + 
+ggplot(intakeAgeDiffDf,aes(age,medianDiffTime)) + 
     geom_line() + 
     facet_grid(Animal.Type.x ~ .)
 
+colnames(intakeAgeDiffDf) = c("age","animalType","stayDuration","count")
+write.csv(intakeAgeDiffDf,"../web/data/dog_cat_stay_vs_age_adoption.csv",row.names = FALSE)
+
 #=====
+
+#mapping Intake.Type to Outcome.Type
+
 joinDf = incomingDf %>% left_join(outgoingDf,by=c("Animal.ID"))
 joinDf = joinDf %>% filter(DateTime.x < DateTime.y | is.na(DateTime.y))
 joinDf[which(is.na(joinDf$DateTime.y)),"Outcome.Type"] = "Staying"

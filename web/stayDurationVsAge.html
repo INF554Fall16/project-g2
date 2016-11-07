@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StayDuration Vs. Age</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="js/moment.min.js"></script>
+    <!-- tooltip -->
+    <script src="js/d3-tip.js"></script>
+    <link rel="stylesheet" href="css/d3-tip.css">
+    <script src="js/main_lib.js"></script>
+    <style>
+        .line {
+            fill: none;
+            stroke: black;
+            stroke-width: 1px;
+        }
+        .bar{
+            stroke: white;
+        }
+        .point{
+            fill: black;
+        }
+        .text{
+            fill: black;
+        }
+        .axis{
+            font-weight: bold;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+        var configuration = {
+            "left_margin": 100,
+            "top_margin": 50,
+            "chart_horizontal_margin": 50,
+            "graph_width": 600,
+            "graph_height": 500,
+            "bar_margin_ratio": 0.2,
+            "bar_padding_ratio": 0.1,
+            "circle_radius": 5,
+            'circle_radius_focus': 10,
+            "text_bar_margin": 2,
+            "x_axis_label_margin": 50,
+            "y_axis_label_margin": -30
+        };
+
+        //For retrieving GET data----------
+        var $_GET = {};
+
+        document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
+            function decode(s) {
+                return decodeURIComponent(s.split("+").join(" "));
+            }
+
+            $_GET[decode(arguments[1])] = decode(arguments[2]);
+        });
+        //----------
+
+        var fileName = $_GET["fileName"];
+        var svg;
+        var tooltipDisplay;
+
+        d3.csv("data/"+fileName+".csv",function(d){
+
+            //prepare tooltips
+            svg = d3.select("svg");
+            var textDisplay = function(d){
+                var stayDuration = d['stayDuration'];
+                stayDuration = Math.round(stayDuration * 100)/100;
+                return stayDuration + " day(s)";
+            }
+            tooltipDisplay = d3.tip().attr('class', 'd3-tip').direction('e').html(function(d) { return textDisplay(d); });
+            svg.call(tooltipDisplay);
+
+            d.forEach(function(dt){
+                dt['age'] = parseInt(dt['age']);
+                dt['stayDuration'] = parseFloat(dt['stayDuration']);
+                dt['count'] = parseInt(dt['count']);
+            });
+
+            var data = d;
+
+            var maxDay = d3.max(data,function(d){return d['stayDuration'];});
+
+            var xScale = d3.scaleBand()
+                    .domain(d3.range(data.length))
+                    .rangeRound([0,configuration["graph_width"]],configuration['bar_margin_ratio'])
+                    .padding(configuration['bar_padding_ratio']);
+
+            var yScaleStay = d3.scaleLinear()
+                    .domain([0,maxDay])
+                    .rangeRound([configuration["graph_height"],0]);
+
+            var g = d3.select("svg g#dog");
+
+            g.attr("transform","translate("+configuration['left_margin']+", "+configuration['top_margin']+" )");
+            drawPartialChart(g,data,"Dog",yScaleStay)
+
+            g = d3.select("svg g#cat");
+
+            g.attr("transform","translate("+ (configuration['left_margin'] + configuration['graph_width'] + configuration['chart_horizontal_margin'])+", "+configuration['top_margin']+" )");
+            drawPartialChart(g,data,"Cat",yScaleStay)
+
+        });
+
+        function drawPartialChart(g,d,animalType,yScaleStay){
+
+            var data = d.filter(function(d){return d['animalType'] == animalType});
+
+            var maxCount = d3.max(data,function(d){return d['count'];});
+
+            var xScale = d3.scaleBand()
+                    .domain(d3.range(data.length))
+                    .rangeRound([0,configuration["graph_width"]],configuration['bar_margin_ratio'])
+                    .padding(configuration['bar_padding_ratio']);
+            var yScaleCount = d3.scaleLinear()
+                    .domain([0,maxCount])
+                    .rangeRound([configuration["graph_height"],0]);
+
+            var lineShaper = d3.line()
+                    .x(function (d,i) {
+                        return xScale(i) + xScale.bandwidth()/2;
+                    })
+                    .y(function (d) {
+                        return yScaleStay(d['stayDuration']);
+                    });
+
+            //draw axis
+            g.append("g")
+                    .classed("axis",true)
+                    .attr("transform","translate(0," + configuration['graph_height']+")")
+                    .call(d3.axisBottom(xScale).tickFormat(function(i){
+                        return data[i]['age'];
+                    }))
+                    .append("text")
+                    .text("Age (#years)")
+                    .attr("x",configuration['graph_width']/2)
+                    .attr("y",configuration['x_axis_label_margin'])
+                    .attr("text-anchor","middle")
+                    .attr("fill","black");
+
+            g.append("g")
+                    .classed("axis",true)
+                    .attr("transform","translate(0,0)")
+                    .call(d3.axisLeft(yScaleStay))
+                    .append("text")
+                    .text("Stay Duration (#days)")
+                    .attr("x",0)
+                    .attr("y",configuration['y_axis_label_margin'])
+                    .attr("text-anchor","middle")
+                    .attr("fill","black");
+
+            //draw contents
+            g.attr("class",animalType);
+            //draw bar chart
+            g.selectAll("rect.new")
+                    .data(data)
+                    .enter()
+                    .append("rect")
+                    .attr("class", "bar")
+                    .attr("x",function(d,i){
+                        return xScale(i);
+                    })
+                    .attr("y",function(d){
+                        return yScaleCount(d['count']);
+                    })
+                    .attr("width",function(d){
+                        return xScale.bandwidth();
+                    })
+                    .attr("height",function(d){
+                        return configuration['graph_height'] - yScaleCount(d['count']);
+                    })
+                    .attr("fill",colorFiller(animalColorDict[animalType]));
+            //draw text above bar chart
+            g.selectAll("text.new")
+                    .data(data)
+                    .enter()
+                    .append("text")
+                    .attr("class", "text")
+                    .attr("x",function(d,i){
+                        return xScale(i) + xScale.bandwidth()/2;
+                    })
+                    .attr("y",function(d){
+                        return yScaleCount(d['count']) - configuration['text_bar_margin'];
+                    })
+                    .attr("text-anchor","middle")
+                    .text(function(d){
+                        return d['count'].toLocaleString();
+                    });
+            //draw line chart
+            g.append("path")
+                    .datum(data)
+                    .attr("class", "line")
+                    .attr("d", lineShaper);
+            //draw points
+            g.selectAll("circle.new")
+                    .data(data)
+                    .enter()
+                    .append("circle")
+                    .attr("class","point")
+                    .attr("cx",function(d,i){return xScale(i) + xScale.bandwidth()/2})
+                    .attr("cy",function(d){return yScaleStay(d['stayDuration'])})
+                    .attr("r",configuration['circle_radius'])
+                    .on("mouseover",function(d,i){
+                        d3.select(this)
+                                .attr("r",configuration['circle_radius_focus']);
+                        tooltipDisplay.show(d,d3.select(this));
+                    })
+                    .on("mouseout",function(d,i){
+                        d3.select(this)
+                                .attr("r",configuration['circle_radius']);
+                        tooltipDisplay.hide();
+                    });
+        }
+    </script>
+    <svg width="100%" height="650px">
+        <g id="dog"></g>
+        <g id="cat"></g>
+    </svg>
+</body>
+</html>
