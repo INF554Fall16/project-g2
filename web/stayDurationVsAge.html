@@ -47,7 +47,10 @@
             'circle_radius_focus': 10,
             "text_bar_margin": 2,
             "x_axis_label_margin": 50,
-            "y_axis_label_margin": -30
+            "y_axis_label_margin": -30,
+            "animal_svg_width": 100,
+            "animal_svg_height": 100,
+
         };
 
         //For retrieving GET data----------
@@ -63,6 +66,10 @@
         //----------
 
         var fileName = $_GET["fileName"];
+        if(typeof fileName == "undefined"){
+            fileName = "dog_cat_stay_vs_age_return_to_owner";
+        }
+
         var svg;
         var tooltipDisplay;
 
@@ -105,9 +112,22 @@
             g = d3.select("svg g#cat");
 
             g.attr("transform","translate("+ (configuration['left_margin'] + configuration['graph_width'] + configuration['chart_horizontal_margin'])+", "+configuration['top_margin']+" )");
-            drawPartialChart(g,data,"Cat",yScaleStay)
+            drawPartialChart(g,data,"Cat",yScaleStay);
+            adjustAnimalSvg();
 
         });
+
+        function adjustAnimalSvg(){
+            d3.select("#svg_dog")
+                    .attr("x",configuration["graph_width"] - configuration["animal_svg_width"])
+                    .attr("width",configuration["animal_svg_width"])
+                    .attr("height",configuration["animal_svg_height"]);
+
+            d3.select("#svg_cat")
+                    .attr("x",configuration["graph_width"] - configuration["animal_svg_width"])
+                    .attr("width",configuration["animal_svg_width"])
+                    .attr("height",configuration["animal_svg_height"]);
+        }
 
         function drawPartialChart(g,d,animalType,yScaleStay){
 
@@ -219,9 +239,15 @@
                     });
         }
     </script>
-    <svg width="100%" height="650px">
-        <g id="dog"></g>
-        <g id="cat"></g>
-    </svg>
+    <center>
+        <svg width="100%" height="650px">
+            <g id="dog">
+                <image id="svg_dog" opacity="0.9" x="0" y="0" width="10" height="10" xlink:href="img/dog.svg" />
+            </g>
+            <g id="cat">
+                <image id="svg_cat" opacity="0.9" x="0" y="0" width="10" height="10" xlink:href="img/cat.svg" />
+            </g>
+        </svg>
+    </center>
 </body>
 </html>
