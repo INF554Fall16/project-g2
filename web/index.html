@@ -2,36 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Test Landing Page</title>
+    <title>Index Page</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script type="text/javascript">
+        function switchPage(id,height){
+            var liElements = document.getElementsByTagName("li");
+            for(var i = 0;i<liElements.length;++i){
+                liElements[i].className = "";
+            }
+            document.getElementById('mainPanel').height = height;
+            switch(id){
+                case "home":
+                        document.getElementById('mainPanel').src = "home.html";
+                        document.getElementById("home").className = "active";
+                    break;
+                case "main":
+                        document.getElementById('mainPanel').src = "main.html";
+                        document.getElementById("main").className = "active";
+                    break;
+                case "about":
+                        document.getElementById('mainPanel').src = "";
+                        document.getElementById("about").className = "active";
+                    break;
+            }
+        }
+    </script>
 </head>
-<body>
-<center>
-    <br/>
-    <div class="container">
-        <div class="jumbotron">
-            <p>Blah Blah Blah...</p>
+<body wid>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Texas Austin Animal Shelter</a>
         </div>
+        <ul class="nav navbar-nav">
+            <li id="home" class="active"><a href="#" onclick="switchPage('home',500)">Home</a></li>
+            <li id="main"><a href="#" onclick="switchPage('main',3800)">Main</a></li>
+            <li id="about"><a href="#" onclick="switchPage('about',500)">About</a></li>
+        </ul>
     </div>
-    <iframe frameborder="0" src="overviewTrend.html" width="1400" height="1000"></iframe>
-    <div class="container">
-        <div class="jumbotron">
-            <p>Blah Blah Blah...</p>
-        </div>
-    </div>
-    <iframe frameborder="0" src="stayDurationVsAge.html?fileName=dog_cat_stay_vs_age_return_to_owner" width="1500" height="660"></iframe>
-    <div class="container">
-        <div class="jumbotron">
-            <p>Blah Blah Blah...</p>
-        </div>
-    </div>
-    <iframe frameborder="0" src="stayDurationVsAge.html?fileName=dog_cat_stay_vs_age_adoption" width="1500" height="660"></iframe>
-    <div class="container">
-        <div class="jumbotron">
-            <p>Blah Blah Blah...</p>
-        </div>
-    </div>
-    <iframe frameborder="0" src="multipleAdoptions.html" width="1400" height="700"></iframe>
-</center>
+</nav>
+<iframe id="mainPanel" frameborder="0" src="home.html" width="100%" height="500"></iframe>
 </body>
 </html>
