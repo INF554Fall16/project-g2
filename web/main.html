@@ -4,13 +4,25 @@
     <meta charset="UTF-8">
     <title>Main Page</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        .jumbotron{
+            text-align: left;
+            line-height: 1.2;
+        }
+        .jumbotron p{
+            font-size: 18px;
+        }
+    </style>
+    <!-- tooltip-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
 <center>
     <br/>
     <div class="container">
         <div class="jumbotron">
-            <p>Blah Blah Blah...</p>
+            <p>We use <b>3 Line Charts</b> to display a number of <a href="#" data-toggle="tooltip" title="Upper line">incoming</a>, <a href="#" data-toggle="tooltip" title="Lower line">outgoing</a>, and <a href="#" data-toggle="tooltip" title="Middle line">leftover</a> animals for each month. The seasonal pattern can be easily spotted; the number of incoming & outgoing tend to increase and peak out around <b>May-Jun</b>, then decline and bottom out near <b>Dec-Jan</b>. Overall, the number of leftover animals are pretty stable. By <a href="#" data-toggle="tooltip" title="click 'All Animals'">separating the chart by animalType</a>, we found that even though most incoming/outgoing animals are dogs, their numbers are relatively stable throughout the years. Most fluctuations are actually <a href="#" data-toggle="tooltip" title="hover on any dots to get a clearer view">came from cats</a>.</p>
         </div>
     </div>
     <iframe frameborder="0" src="overviewTrend.html" width="1400" height="1000"></iframe>
@@ -33,5 +45,11 @@
     </div>
     <iframe frameborder="0" src="multipleAdoptions.html" width="1400" height="700"></iframe>
 </center>
+<!-- enable tooltip -->
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 </body>
 </html>
