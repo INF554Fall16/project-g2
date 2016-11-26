@@ -42,6 +42,7 @@ var margin = {top: 10, right: 10, bottom: 10, left: 10},
 var formatNumber = d3.format(",.0f"),    // zero decimal places
     format = function(d) { return formatNumber(d) + " " + units; },
     color = d3.scale.category20();
+    //color = d3.scaleOrdinal(d3.schemeCategory20)
 
 // append the svg canvas to the page
 var svg = d3.select("#chart").append("svg")
@@ -89,7 +90,8 @@ d3.csv("/data/sankeyFlow.csv", function(error, data) {
      graph.nodes.forEach(function (d, i) {
        graph.nodes[i] = { "name": d };
      });
-
+  
+  console.log(graph)
   sankey
     .nodes(graph.nodes)
     .links(graph.links)
