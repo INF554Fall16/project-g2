@@ -30,7 +30,7 @@
 <p id="chart">
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="/js/sankey.js"></script>
+<script src="js/sankey.js"></script>
 <script>
 	
 var units = "animals";
@@ -61,7 +61,7 @@ var sankey = d3.sankey()
 var path = sankey.link();
 
 // load the data (using the timelyportfolio csv method)
-d3.csv("/data/sankeyFlow.csv", function(error, data) {
+d3.csv("data/sankeyFlow.csv", function(error, data) {
 
   //set up graph in same style as original example but empty
   graph = {"nodes" : [], "links" : []};
