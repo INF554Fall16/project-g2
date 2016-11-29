@@ -89,7 +89,9 @@
             //initially, the map centered on Austin (TX)
             initLat: 30.267153,
             initLong: -97.7430608,
-            mapZoom: 11
+            mapZoom: 11,
+            //configure spider radius for markers that fall on the same place
+            rSpider: 0.02
         };
 
         //weeksPerTable dynamically adjusted based on page's width
@@ -99,6 +101,7 @@
         //for a map
         var locationMap;
         var locationMarkerGroup;
+        var polyLineGroup;
 
         var minDate = moment("2014-01-01");
         var maxDate = moment("2016-10-01");
@@ -246,7 +249,6 @@
                 }
             }
         }
-
         function displayCalendarView(animalId){
             //clear highlight
             highlightCells.forEach(function(d){
@@ -297,11 +299,11 @@
 
                     //add tooltip
                     if(classname == "barFillIntake"){
-                        fixTooltip("#"+cellId + " a",d['Intake.Type']);
+                        fixTooltip("#"+cellId + " a","(" + (i+1) + ")" + d['Intake.Type']);
                     }else if(classname == "barFillOutgoing"){
                         fixTooltip("#"+cellId + " a",d['Outcome.Type']);
                     }else if(classname == "barFillSameday"){
-                        fixTooltip("#"+cellId + " a",d['Intake.Type'] + "  /  " + d['Outcome.Type']);
+                        fixTooltip("#"+cellId + " a","(" + (i+1) + ")" + d['Intake.Type'] + "  /  " + d['Outcome.Type']);
                     }
 
                     //add location tracking
@@ -325,12 +327,52 @@
             //update map markers
             //clear markers
             locationMarkerGroup.clearLayers();
+            polyLineGroup.clearLayers();
 
             var sumLat = 0;
             var sumLong = 0;
+            var dictLocation = {};
+
             filterDataset.forEach(function(d,i){
                 var lat = parseFloat(d['lat']);
                 var lng = parseFloat(d['lng']);
+
+                var key = lat + "," + lng;
+                if(key in dictLocation){
+                    dictLocation[key] = dictLocation[key] + 1;
+                }else{
+                    dictLocation[key] = 1;
+                }
+            });
+
+            var dictCountIndex = {};
+            var rSpider = configuration['rSpider'];
+            filterDataset.forEach(function(d,i){
+                var lat = parseFloat(d['lat']);
+                var lng = parseFloat(d['lng']);
+
+                var key = lat + "," + lng;
+                if(dictLocation[key] > 1){
+                    var allIndexCount = dictLocation[key];
+                    var currentIndex;
+
+                    if(key in dictCountIndex){
+                        dictCountIndex[key] = dictCountIndex[key] + 1;
+                    }else{
+                        dictCountIndex[key] = 1;
+                    }
+
+                    currentIndex = dictCountIndex[key];
+                    var portionAngle = 360 / allIndexCount;
+                    lat = lat + (rSpider*Math.cos(Math.PI * (currentIndex*portionAngle/180)));
+                    lng = lng + (rSpider*Math.sin(Math.PI * (currentIndex*portionAngle/180)));
+
+                    //add spider to de-cluster markers
+                    L.polyline([
+                        [lat,lng],
+                        [parseFloat(d['lat']),parseFloat(d['lng'])]
+                    ],{color: 'black'}).addTo(polyLineGroup);
+                }
 
                 sumLat += lat;
                 sumLong += lng;
@@ -340,6 +382,7 @@
                     number: i+1,
                     markerColor: 'red'
                 });
+
                 L.marker([lat,lng], {icon: numMarker}).addTo(locationMarkerGroup);
             });
             var meanLat = sumLat/filterDataset.length;
@@ -405,6 +448,7 @@
             }).addTo(locationMap);
 
             locationMarkerGroup = L.layerGroup().addTo(locationMap);
+            polyLineGroup = L.layerGroup().addTo(locationMap);
         }
     </script>
     <!--- scripts belong to HTML --->
