@@ -30,8 +30,8 @@ df <- df[df$Lat <= latmax,]
 df <- df[df$Lng >= lngmin,]
 df <- df[df$Lng <= lngmax,]
 
-latsecN=20
-lngsecN=25
+latsecN=100
+lngsecN=85
 width=(latmax-latmin)/latsecN
 height=(lngmax-lngmin)/lngsecN
 

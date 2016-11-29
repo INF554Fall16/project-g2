@@ -1,0 +1,543 @@
+<html>
+   <head>
+       <title>Geomap</title>
+       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+       <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+       <script src="https://d3js.org/d3-color.v1.min.js"></script>
+        <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+       <style type="text/css">	
+       		#mapid { height: 660px; width: 800px}
+          	.austin {
+              fill: none;
+              stroke: red;
+              stroke-linejoin: round;
+          }
+
+       </style>
+   </head>
+   <body>
+
+      Shown by: 
+      <form action="">
+          <input type="radio" id="total" name="showWay" value="total" checked="checked" onclick="drawmap('total');"> Total
+          <input type="radio" id="typeOfAnimal" name="showWay" value="typeOfAnimal" onclick="drawmap('animal');"> Animal Type
+          <input type="radio" id="year" name="showWay" value="year" onclick="drawmap('year');"> Year
+          <input type="radio" id="season" name="showWay" value="season" onclick="drawmap('season');"> Season
+          <input type="radio" id="time" name="showWay" value="time" onclick="drawmap('time');"> Time of a day
+      </form>
+
+       <div id="mapid"></div>
+
+       <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+       <script type="text/javascript">
+       		
+       		var background = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoid2VuamlhIiwiYSI6ImNpdncyZmxubDAwd3EyeXBjZHM2NW56d3AifQ.cNRZSSxZ_s3f4RKqp3NvvA', 
+          {
+    			   attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    			   maxZoom: 25,
+    			   id: 'mapbox.light',
+    			   accessToken: 'ppk.eyJ1Ijoid2VuamlhIiwiYSI6ImNpdncyZmxubDAwd3EyeXBjZHM2NW56d3AifQ.cNRZSSxZ_s3f4RKqp3NvvA'
+          });
+
+          var mymap;
+          var backgroundNeighborhood;
+          var locationsTotal;
+          var baseMaps;
+          var overlayMaps;
+          var lcontrol;
+          var locationsBird;
+          var locationsDog;
+          var locationsCat;
+          var locationsOther;
+          var locations2013;
+          var locations2014;
+          var locations2015;
+          var locations2016;
+          var locationsSpring;
+          var locationsSummer;
+          var locationsAutumn;
+          var locationsWinter;
+          var locationsMorning;
+          var locationsNoon;
+          var locationsAfternoon;
+          var locationsEvening;
+          var locationsNight;
+          var locationsMidnight;
+          var BackgroundGridLayer
+
+          var gridW_degree = 0.0045
+          var gridH_degree = 0.004588235
+          var N_w = 100
+          var N_h = 85
+          var lngmin=-98.01
+          var latmin=30.08
+
+          var verticalP=[]
+          var horizontalP=[]
+
+
+          for (var i_lat=0; i_lat<N_w+1; i_lat++)
+          {
+            horizontalP.push(i_lat*gridW_degree+latmin)
+          }
+
+          for (var i_lng=0; i_lng<N_h+1; i_lng++)
+          {
+            verticalP.push(i_lng*gridH_degree+lngmin)
+          }
+
+          var Nanimal = Array.apply(null, Array(N_w*N_h)).map(Number.prototype.valueOf,0);
+
+//          console.log(Nanimal)
+
+
+          var width = 800//$(window).width(),
+              height = 660//$(window).height();
+
+
+          var svg = d3.select("div").append("svg")
+                      .attr("width", width)
+                      .attr("height", height);
+
+          var mycolor = [ "#4169E1",
+                          "#0000FF",
+                          "#0000F7",
+                          "#0000EF",
+                          "#0000DF",
+                          "#0000DC",
+                          "#0000CD",
+                          "#0000C7",
+                          "#0000C0",
+                          "#0000BD",
+                          "#0000B7",
+                          "#0000B0",
+                          "#0000AD",
+                          "#0000A7",
+                          "#0000A0",
+                          "#00009D",
+                          "#000097",
+                          "#000090",
+                          "#00008D",
+                          "#00008B",
+                          "#000080",
+                          "#00007D",
+                          "#00006D",
+                          "#191970"
+                          ]
+ 
+          // Use Feature to display multiple path elements:
+
+          d3.queue()
+                .defer(d3.csv,"data/foundlocation.csv", function(d) {
+                	return {
+                    lat: +d.lat,
+                    lng: +d.lng, // + to convert to float otherwise we get text!
+                    total: +d.total,
+                    bird: +d.bird,
+                    cat: +d.cat,
+                    dog: +d.dog,
+                    livestock: +d.livestock,
+                    other: +d.other,
+                    year2013: +d.year2013,
+                    year2014: +d.year2014,
+                    year2015: +d.year2015,
+                    year2016: +d.year2016,
+                    Jan: +d.Jan,
+                    Feb: +d.Feb,
+                    Mar: +d.Mar,
+                    Apr: +d.Apr,
+                    May: +d.May,
+                    June: +d.June,
+                    July: +d.July,
+                    Aug: +d.Aug,
+                    Sep: +d.Sep,
+                    Oct: +d.Oct,
+                    Nov: +d.Nov,
+                    Dec: +d.Dec,
+                    hour0: +d.hour0,
+                    hour1: +d.hour1,
+                    hour2: +d.hour2,
+                    hour3: +d.hour3,
+                    hour4: +d.hour4,
+                    hour5: +d.hour5,
+                    hour6: +d.hour6,
+                    hour7: +d.hour7,
+                    hour8: +d.hour8,
+                    hour9: +d.hour9,
+                    hour10: +d.hour10,
+                    hour11: +d.hour11,
+                    hour12: +d.hour12,
+                    hour13: +d.hour13,
+                    hour14: +d.hour14,
+                    hour15: +d.hour15,
+                    hour16: +d.hour16,
+                    hour17: +d.hour17,
+                    hour18: +d.hour18,
+                    hour19: +d.hour19,
+                    hour20: +d.hour20,
+                    hour21: +d.hour21,
+                    hour22: +d.hour22,
+                    hour23: +d.hour23,
+
+                };}
+
+                )
+                .defer(d3.json,"data/austinNeighborhood.geojson")
+                .await(function(error,data,boundery){
+
+                    dataset=data;
+                    neighbourLayer=[]
+//                    console.log(mycolor)
+                    for (var i=0; i<boundery.features.length; i++)
+                    {
+                      //console.log(i)
+                      var tmp=[]
+                      var list=boundery.features[i].geometry.coordinates[0][0]
+                      var newlist=[]
+                      for (var j=0; j<list.length; j++){
+                        newlist.push([list[j][1],list[j][0]])
+                      }
+                      //console.log(boundery.features[i])
+                      tmp=L.polygon(newlist).bindPopup(boundery.features[i].properties.name).setStyle({fillColor: '(0,0,186)', stroke:false});;
+                      neighbourLayer.push(tmp)
+                    }
+                    backgroundNeighborhood = L.layerGroup(neighbourLayer)
+
+                    gridLayer=[]
+                    for (var i=0; i<(N_h*N_w); i++)
+                    {
+                      
+                      var tmp=[]
+                      i_lat = i % (N_w)
+                      i_lng = Math.floor(i / N_w)
+                      //console.log(i,horizontalP[i_lat],verticalP[i_lng])
+                      var list=[[horizontalP[i_lat],verticalP[i_lng]],
+                               [horizontalP[i_lat+1],verticalP[i_lng]],
+                               [horizontalP[i_lat+1],verticalP[i_lng+1]],
+                               [horizontalP[i_lat],verticalP[i_lng+1]]]
+                      //console.log(list)   //.bindPopup(boundery.features[i].properties.name)
+                     tmp=L.polygon(list).setStyle({stroke:true, color:'#03f', weight:0.2, opacity:0.95, fill:false});;
+                     gridLayer.push(tmp)
+                    }
+                    BackgroundGridLayer = L.layerGroup(gridLayer)
+
+
+
+                    locationsTotal = L.layerGroup(addlocationLayers(dataset,"Total"))
+                    locationsBird = L.layerGroup(addlocationLayers(dataset,"Bird"))
+                    locationsDog = L.layerGroup(addlocationLayers(dataset,"Dog"))
+                    locationsCat = L.layerGroup(addlocationLayers(dataset,"Cat"))
+                    locationsOther = L.layerGroup(addlocationLayers(dataset,"Other"))
+                    locations2013 = L.layerGroup(addlocationLayers(dataset,"Year2013"))
+                    locations2014 = L.layerGroup(addlocationLayers(dataset,"Year2014"))
+                    locations2015 = L.layerGroup(addlocationLayers(dataset,"Year2015"))
+                    locations2016 = L.layerGroup(addlocationLayers(dataset,"Year2016"))
+                    locationsSpring = L.layerGroup(addlocationLayers(dataset,"Spring"))
+                    locationsSummer = L.layerGroup(addlocationLayers(dataset,"Summer"))
+                    locationsAutumn = L.layerGroup(addlocationLayers(dataset,"Autumn"))
+                    locationsWinter = L.layerGroup(addlocationLayers(dataset,"Winter"))
+                    locationsMorning = L.layerGroup(addlocationLayers(dataset,"Morning"))
+                    locationsNoon = L.layerGroup(addlocationLayers(dataset,"Noon"))
+                    locationsAfternoon = L.layerGroup(addlocationLayers(dataset,"Afternoon"))
+                    locationsEvening = L.layerGroup(addlocationLayers(dataset,"Evening"))
+                    locationsNight = L.layerGroup(addlocationLayers(dataset,"Night"))
+                    locationsMidnight = L.layerGroup(addlocationLayers(dataset,"Midnight"))
+
+                  mymap = L.map('mapid', {
+                      center: [30.247222, -97.773889],
+                      zoom: 12,
+                      layers: [background, backgroundNeighborhood, locationsTotal, BackgroundGridLayer]
+                    })
+                  baseMaps = {"Background": background}
+                  overlayMaps = {"Total": locationsTotal, "BackgroundGridLayer": BackgroundGridLayer};
+
+                  lcontrol = L.control.layers(baseMaps, overlayMaps).addTo(mymap);
+
+
+                  // document.getElementById("total").addEventListener("checked", drawmap("total"));
+                  // document.getElementById("typeOfAnimal").addEventListener("checked", drawmap("animal"));
+                  // document.getElementById("year").addEventListener("checked", drawmap("year"));
+                  // document.getElementById("season").addEventListener("checked", drawmap("season"));
+                  // document.getElementById("time").addEventListener("checked", drawmap("time"));
+                               
+                    var popup = L.popup();
+
+                     function onMapClick(e) {
+                        popup
+                        .setLatLng(e.latlng)
+                        .setContent("You clicked the map at " + e.latlng.toString())
+                        .openOn(mymap);}
+
+                     mymap.on('click', onMapClick);
+                  //console.log(document.getElementById("total").checked)
+                  var g = svg.append("g")
+                            .attr("class", "key")
+                            .attr("transform", "translate(0,40)");
+
+
+                   }
+                )
+
+
+
+   //      function commandHomeChange() {
+   //      	commhome=document.getElementById("home").value
+   //      	if (commhome == "Total") {
+			// 	document.getElementById("animal").disabled = true;
+			// 	document.getElementById("years").disabled = true;
+			// 	document.getElementById("months").disabled = true;
+			// 	document.getElementById("hours").disabled = true;
+			// 	comm=commhome
+			// 	newArray=currentArray(dataset,comm)
+			// }
+			// if (commhome == "Animal") {
+			// 	document.getElementById("animal").disabled = false;
+			// 	document.getElementById("years").disabled = true;
+			// 	document.getElementById("months").disabled = true;
+			// 	document.getElementById("hours").disabled = true;
+			// 	comm=document.getElementById("animal").value
+			// 	newArray=currentArray(dataset,command)
+			// }
+
+			// for (var i=0; i<newArray.length; i++){
+   //              L.circle([newArray[i].lat, newArray[i].lng], Math.sqrt(newArray[i].v)*10, {
+   //                  color: 'red',
+			// 		fillColor: '#f03',
+			// 		fillOpacity: 0.5
+			// 	}).addTo(mymap).bindPopup('Num of animal been found: '+newArray[i].v);
+   //          }
+			// console.log(command)
+		  	// 			newArray=currentArray(dataset,"total")
+     //                	console.log(dataset)
+     //                	for (var i=0; i<newArray.length; i++)
+     //                	{
+     //                		L.circle([newArray[i].lat, newArray[i].lng], Math.sqrt(newArray[i].total)*10, {
+     //                			color: 'red',
+					// 			fillColor: '#f03',
+					// 			fillOpacity: 0.5
+					// 		}).addTo(mymap).bindPopup('Num of animal been found: '+newArray[i].total);
+     //                	}
+					// }
+			
+			//update();}
+
+      function drawmap(comm)
+                  {
+                    mymap.remove()
+
+                    //console.log(comm)
+                    if (comm=="total") {
+                      
+                      mymap = L.map('mapid', {
+                        center: [30.247222, -97.773889],
+                        zoom: 12,
+                        layers: [background, backgroundNeighborhood, locationsTotal, BackgroundGridLayer]
+                      })
+
+                      overlayMaps = {"Total": locationsTotal,"BackgroundGridLayer": BackgroundGridLayer};
+                      L.control.layers(baseMaps, overlayMaps).addTo(mymap)
+                    }
+
+                    if (comm=="animal"){
+
+                      mymap = L.map('mapid', {
+                        center: [30.247222, -97.773889],
+                        zoom: 12,
+                        layers: [background, backgroundNeighborhood, locationsDog, BackgroundGridLayer]
+                      })
+                      overlayMaps = {
+                        "Dog": locationsDog,
+                        "Bird": locationsBird,
+                        "Cat": locationsCat,
+                        "Other": locationsOther,
+                      };
+                      // L.control.layers(baseMaps, overlayMaps).addTo(mymap)
+                    }
+
+                    if (comm=="year"){
+
+                      mymap = L.map('mapid', {
+                        center: [30.247222, -97.773889],
+                        zoom: 12,
+                        layers: [background, backgroundNeighborhood, locations2013, BackgroundGridLayer]
+                      })
+                      overlayMaps = {
+                        "2013": locations2013,
+                        "2014": locations2014,
+                        "2015": locations2015,
+                        "2016": locations2016,
+                      };
+                      // L.control.layers(baseMaps, overlayMaps).addTo(mymap)
+                    }
+                    if (comm=="season"){
+
+                      mymap = L.map('mapid', {
+                        center: [30.247222, -97.773889],
+                        zoom: 12,
+                        layers: [background, backgroundNeighborhood, locationsSpring, BackgroundGridLayer]
+                      })
+                     overlayMaps = {
+                        "Spring": locationsSpring,
+                        "Summer": locationsSummer,
+                        "Autumn": locationsAutumn,
+                        "Winter": locationsWinter,
+                      };
+                      // L.control.layers(baseMaps, overlayMaps).addTo(mymap)
+                    }
+                    if (comm=="time"){
+
+                      mymap = L.map('mapid', {
+                        center: [30.247222, -97.773889],
+                        zoom: 12,
+                        layers: [background, backgroundNeighborhood, locationsMorning, BackgroundGridLayer]
+                      })
+                      overlayMaps = {
+                        "Morning(6am-10am)": locationsMorning,
+                        "Noon(11am-2pm)": locationsNoon,
+                        "Afternoon(3pm-6pm)": locationsAfternoon,
+                        "Evening(7pm-9pm)": locationsEvening,
+                        "Night(10pm-0am)": locationsNight,
+                        "Midnight(1am-5am)": locationsMidnight,
+                      };
+                      // L.control.layers(baseMaps, overlayMaps).addTo(mymap)
+                    }
+                    L.control.layers(baseMaps, overlayMaps).addTo(mymap)
+    }
+		function addlocationLayers(dataset, command){
+
+			        newArray=currentArray(dataset,command)
+
+              var color = d3.scaleThreshold()
+                            .domain(d3.range(-200, 500))
+                            .range(d3.schemeBlues[9]);
+
+
+              // var quantize = d3.scaleQuantize()
+              //         .domain([0, 500])
+              //         .range(d3.range(24).map(function(i) { return i; }));
+
+                    locationLayer=[]
+                    for (var i=0; i<newArray.length; i++)
+                    {
+                      cLa=newArray[i].lat
+                      cLn=newArray[i].lng
+                      //colorIndex=quantize(newArray[i].v)
+                      //if (colorIndex > 5) colorIndex=5;
+
+                      oo=newArray[i].v/100
+//                      console.log(color(newArray[i].v))
+                      temp = L.polygon([[cLa - gridW_degree/2, cLn - gridH_degree/2], 
+                                [cLa - gridW_degree/2, cLn + gridH_degree/2], 
+                                [cLa + gridW_degree/2, cLn + gridH_degree/2], 
+                                [cLa + gridW_degree/2, cLn - gridH_degree/2],])
+                              .bindPopup('Num of animal been found('+command+'): '+newArray[i].v).setStyle({ fillColor: '#FFA500', stroke:false, fillOpacity: oo }); //fillColor: '#0000FF', #FFA500
+						          locationLayer.push(temp)
+                    }
+                   // console.log(command)
+                   // console.log(locationLayer)
+                    return locationLayer;
+		}
+        function currentArray(dataset,command){
+        		newArray=[]
+        		if (command=="Total") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].total})
+        			}
+        		}
+        		if (command=="Bird") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].bird})
+        			}
+        		}
+        		if (command=="Dog") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].dog})
+        			}
+        		}
+        		if (command=="Cat") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].cat})
+        			}
+        		}
+        		if (command=="Other") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].other})
+        			}
+        		}
+        		if (command=="Year2013") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].year2013})
+        			}
+        		}
+        		if (command=="Year2014") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].year2014})
+        			}
+        		}
+        		if (command=="Year2015") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].year2015})
+        			}
+        		}
+        		if (command=="Year2016") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].year2016})
+        			}
+        		}
+        		if (command=="Morning") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].hour6+dataset[k].hour7+dataset[k].hour8+dataset[k].hour9+dataset[k].hour10})
+        			}
+        		}
+        		if (command=="Noon") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].hour11+dataset[k].hour12+dataset[k].hour13+dataset[k].hour14})
+        			}
+        		}
+        		if (command=="Afternoon") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].hour15+dataset[k].hour16+dataset[k].hour17+dataset[k].hour18})
+        			}
+        		}
+        		if (command=="Evening") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].hour19+dataset[k].hour20+dataset[k].hour21})
+        			}
+        		}
+        		if (command=="Night") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].hour21+dataset[k].hour22+dataset[k].hour23+dataset[k].hour0})
+        			}
+        		}
+        		if (command=="Midnight") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].hour1+dataset[k].hour2+dataset[k].hour3+dataset[k].hour4+dataset[k].hour5})
+        			}
+        		}
+        		if (command=="Spring") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].Mar+dataset[k].Apr+dataset[k].May})
+        			}
+        		}
+        		if (command=="Summer") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].June+dataset[k].July+dataset[k].Aug})
+        			}
+        		}
+        		if (command=="Autumn") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].Sep+dataset[k].Oct+dataset[k].Nov})
+        			}
+        		}
+        		if (command=="Winter") {
+        			for (var k=0; k<dataset.length; k++){
+        				newArray.push({lat: dataset[k].lat, lng: dataset[k].lng, v: dataset[k].Dec+dataset[k].Jan+dataset[k].Feb})
+        			}
+        		}
+        		newArray.sort(function(a,b){return b.v-a.v});
+        		return newArray.slice(0,10);
+        }
+       </script>
+   </body>
+</html>
