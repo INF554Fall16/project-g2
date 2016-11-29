@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Index Page</title>
+    <title>Explore Animal Shelter Operation</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script type="text/javascript">
         function switchPage(id,height){
@@ -21,7 +21,7 @@
                         document.getElementById("main").className = "active";
                     break;
                 case "about":
-                        document.getElementById('mainPanel').src = "";
+                        document.getElementById('mainPanel').src = "about.html";
                         document.getElementById("about").className = "active";
                     break;
             }
@@ -36,8 +36,8 @@
         </div>
         <ul class="nav navbar-nav">
             <li id="home" class="active"><a href="#" onclick="switchPage('home',500)">Home</a></li>
-            <li id="main"><a href="#" onclick="switchPage('main',3800)">Main</a></li>
-            <li id="about"><a href="#" onclick="switchPage('about',500)">About</a></li>
+            <li id="main"><a href="#" onclick="switchPage('main',5300)">Main</a></li>
+            <li id="about"><a href="#" onclick="switchPage('about',800)">About</a></li>
         </ul>
     </div>
 </nav>
