@@ -22,7 +22,7 @@
     <br/>
     <div class="container">
         <div class="jumbotron">
-            <p>We use <b>3 Line Charts</b> to display a number of <a href="#" data-toggle="tooltip" title="Upper line">incoming</a>, <a href="#" data-toggle="tooltip" title="Lower line">outgoing</a>, and <a href="#" data-toggle="tooltip" title="Middle line">leftover</a> animals for each month. The seasonal pattern can be easily spotted; the number of incoming & outgoing tend to increase and peak out around <b>May-Jun</b>, then decline and bottom out near <b>Dec-Jan</b>. Overall, the number of leftover animals are pretty stable. By <a href="#" data-toggle="tooltip" title="click 'All Animals'">separating the chart by animalType</a>, we found that even though most incoming/outgoing animals are dogs, their numbers are relatively stable throughout the years. Most fluctuations are actually <a href="#" data-toggle="tooltip" title="hover on any dots to get a clearer view">come from cats</a>.</p>
+            <p>We begin with exploring the overall operation of the shelter. We use <b>3 Line Charts</b> to display a number of <a href="#" data-toggle="tooltip" title="Upper line">incoming</a>, <a href="#" data-toggle="tooltip" title="Lower line">outgoing</a>, and <a href="#" data-toggle="tooltip" title="Middle line">leftover</a> animals for each month. The seasonal pattern can be easily spotted; the number of incoming & outgoing tend to increase and peak out around <b>May-Jun</b>, then decline and bottom out near <b>Dec-Jan</b>. Overall, the number of leftover animals are pretty stable. By <a href="#" data-toggle="tooltip" title="click 'All Animals'">separating the chart by animalType</a>, we found that even though most incoming/outgoing animals are dogs, their numbers are relatively stable throughout the years. Most fluctuations are actually <a href="#" data-toggle="tooltip" title="hover on any dots to get a clearer view">come from cats</a>.</p>
         </div>
     </div>
     <iframe frameborder="0" src="overviewTrend.html" width="1400" height="1000"></iframe>
@@ -33,7 +33,6 @@
         </div>
     </div>
     <iframe frameborder="0" src="sankey.html" width="1400" height="1000"></iframe>
-
     <div class="container">
         <div class="jumbotron">
             <p>We narrow down our focus to <b>dog & cat</b>. We interest in how long does it takes for the pet owners to take their pet back. <b>Small Multiple</b> is used to display a relationship between the <a href="#" data-toggle="tooltip" title="X-axis">Animal's age</a> (upon intake) and the <a href="#" data-toggle="tooltip" title="Y-axis & Line Chart">Median days</a> that the animals with this age range stayed until they were returned to their owner. For dogs, as they grow <b>older</b>, their owners tend to take them back <a href="#" data-toggle="tooltip" title="hover on any dots to get a clearer view">sooner</a>. This may suggest a <b>tighter relationship</b> between owner & dog as time go by. Surprisingly, such pattern is not observed in cats. Additionally, cat owners tend to take <b>longer</b> time to return their cat backs. By inspecting the <a href="#" data-toggle="tooltip" title="Histogram Chart">number of cats</a> in each age range, we noticed that this may be because of an insufficient number of records.</p>
@@ -48,7 +47,7 @@
     <iframe frameborder="0" src="stayDurationVsAge.html?fileName=dog_cat_stay_vs_age_adoption" width="1500" height="660"></iframe>
     <div class="container">
         <div class="jumbotron">
-            <p>Blah Blah Blah...</p>
+            <p>Lastly, we found that some animals were taken by the shelter <b>multiple times</b>. This may indicates a <b>mistreatment</b> of pets. We provide a <a href="#" data-toggle="tooltip" title="select from the dropdown list">list of these animal</a>, along with their <a href="#" data-toggle="tooltip" title="animalId(number of Intake)\animalType\sex\breed\color">additional information</a>. We use <b>Calendar</b> to mark the event when they came to, and went out of the shelter. Users can also investigate <b>intakeCondition</b> and <b>outgoingCondition</b> by <b>hovering</b> on the corresponding cell or selecting <b>'showAllToolTips'</b>. <b>Geographical Map</b> is also used to mark the location where they were found. The <b>number</b> in the tooltips and markers indicates the <b>order</b> of Intake event. By <b>clicking on the Intake cell</b>, the map will focus to the associated event. While we expect that animals should be found in a similar area where they were previously discovered, some were found in a <a href="#" data-toggle="tooltip" title="select the first animal in the list and explore event#9, for example">very unusual, distant location</a>.</p>
         </div>
     </div>
     <iframe frameborder="0" src="multipleAdoptions.html" width="1400" height="700"></iframe>
