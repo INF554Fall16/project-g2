@@ -62,7 +62,7 @@
         }
         .barFillIntake{
             background-color: red;
-            color: black;
+            color: white;
         }
         .barFillInterval{
             background-color: palevioletred;
@@ -372,6 +372,16 @@
                         [lat,lng],
                         [parseFloat(d['lat']),parseFloat(d['lng'])]
                     ],{color: 'black'}).addTo(polyLineGroup);
+
+                    //plot the center of location also
+                    if(currentIndex == 1){
+                        var circle = L.circle([parseFloat(d['lat']), parseFloat(d['lng'])], {
+                            color: 'black',
+                            fillColor: 'black',
+                            fillOpacity: 0.5,
+                            radius: 200
+                        }).addTo(locationMarkerGroup);
+                    }
                 }
 
                 sumLat += lat;
