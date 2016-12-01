@@ -15,14 +15,10 @@
     <style>
         .line {
             fill: none;
-            stroke: black;
             stroke-width: 1px;
         }
         .bar{
             stroke: white;
-        }
-        .point{
-            fill: black;
         }
         .text{
             fill: black;
@@ -43,8 +39,9 @@
             "graph_height": 500,
             "bar_margin_ratio": 0.2,
             "bar_padding_ratio": 0.1,
-            "circle_radius": 5,
-            'circle_radius_focus': 10,
+            "circle_min_radius": 2,
+            "circle_max_radius": 7,
+            'circle_radius_focus': 9,
             "text_bar_margin": 2,
             "x_axis_label_margin": 50,
             "y_axis_label_margin": -30,
@@ -67,11 +64,13 @@
 
         var fileName = $_GET["fileName"];
         if(typeof fileName == "undefined"){
+            //for testing
             fileName = "dog_cat_stay_vs_age_return_to_owner";
         }
 
         var svg;
-        var tooltipDisplay;
+        var tooltipAge;
+        var tooltipCount;
 
         d3.csv("data/"+fileName+".csv",function(d){
 
@@ -82,8 +81,11 @@
                 stayDuration = Math.round(stayDuration * 100)/100;
                 return stayDuration + " day(s)";
             }
-            tooltipDisplay = d3.tip().attr('class', 'd3-tip').direction('e').html(function(d) { return textDisplay(d); });
-            svg.call(tooltipDisplay);
+            tooltipAge = d3.tip().attr('class', 'd3-tip').direction('e').html(function(d) { return textDisplay(d); });
+            tooltipCount = d3.tip().attr('class', 'd3-tip').direction('s').html(function(d) { return d['count'].toLocaleString() + " record(s)"; });
+
+            svg.call(tooltipAge);
+            svg.call(tooltipCount);
 
             d.forEach(function(dt){
                 dt['age'] = parseInt(dt['age']);
@@ -114,7 +116,6 @@
             g.attr("transform","translate("+ (configuration['left_margin'] + configuration['graph_width'] + configuration['chart_horizontal_margin'])+", "+configuration['top_margin']+" )");
             drawPartialChart(g,data,"Cat",yScaleStay);
             adjustAnimalSvg();
-
         });
 
         function adjustAnimalSvg(){
@@ -124,7 +125,7 @@
                     .attr("height",configuration["animal_svg_height"]);
 
             d3.select("#svg_cat")
-                    .attr("x",configuration["graph_width"] - configuration["animal_svg_width"])
+                    .attr("x",0)
                     .attr("width",configuration["animal_svg_width"])
                     .attr("height",configuration["animal_svg_height"]);
         }
@@ -139,9 +140,10 @@
                     .domain(d3.range(data.length))
                     .rangeRound([0,configuration["graph_width"]],configuration['bar_margin_ratio'])
                     .padding(configuration['bar_padding_ratio']);
-            var yScaleCount = d3.scaleLinear()
-                    .domain([0,maxCount])
-                    .rangeRound([configuration["graph_height"],0]);
+            var radiusScaler = d3.scaleLinear()
+                    .domain([1,100])
+                    .range([configuration['circle_min_radius'],configuration['circle_max_radius']])
+                    .clamp(true);
 
             var lineShaper = d3.line()
                     .x(function (d,i) {
@@ -159,7 +161,7 @@
                         return data[i]['age'];
                     }))
                     .append("text")
-                    .text("Age (#years)")
+                    .text("Animal's Age (years)")
                     .attr("x",configuration['graph_width']/2)
                     .attr("y",configuration['x_axis_label_margin'])
                     .attr("text-anchor","middle")
@@ -170,74 +172,45 @@
                     .attr("transform","translate(0,0)")
                     .call(d3.axisLeft(yScaleStay))
                     .append("text")
-                    .text("Stay Duration (#days)")
-                    .attr("x",0)
-                    .attr("y",configuration['y_axis_label_margin'])
+                    .text("Number of Staying Duration (days)")
                     .attr("text-anchor","middle")
-                    .attr("fill","black");
+                    .attr("fill","black")
+                    .attr("transform","rotate(-90)")
+                    .attr("x",-100)
+                    .attr("y",configuration['y_axis_label_margin']);
 
             //draw contents
             g.attr("class",animalType);
-            //draw bar chart
-            g.selectAll("rect.new")
-                    .data(data)
-                    .enter()
-                    .append("rect")
-                    .attr("class", "bar")
-                    .attr("x",function(d,i){
-                        return xScale(i);
-                    })
-                    .attr("y",function(d){
-                        return yScaleCount(d['count']);
-                    })
-                    .attr("width",function(d){
-                        return xScale.bandwidth();
-                    })
-                    .attr("height",function(d){
-                        return configuration['graph_height'] - yScaleCount(d['count']);
-                    })
-                    .attr("fill",colorFiller(animalColorDict[animalType]));
-            //draw text above bar chart
-            g.selectAll("text.new")
-                    .data(data)
-                    .enter()
-                    .append("text")
-                    .attr("class", "text")
-                    .attr("x",function(d,i){
-                        return xScale(i) + xScale.bandwidth()/2;
-                    })
-                    .attr("y",function(d){
-                        return yScaleCount(d['count']) - configuration['text_bar_margin'];
-                    })
-                    .attr("text-anchor","middle")
-                    .text(function(d){
-                        return d['count'].toLocaleString();
-                    });
             //draw line chart
             g.append("path")
                     .datum(data)
                     .attr("class", "line")
-                    .attr("d", lineShaper);
+                    .attr("d", lineShaper)
+                    .attr("stroke",colorFiller(animalColorDict[animalType]));
+
             //draw points
             g.selectAll("circle.new")
                     .data(data)
                     .enter()
                     .append("circle")
-                    .attr("class","point")
+                    .attr("fill",colorFiller(animalColorDict[animalType]))
                     .attr("cx",function(d,i){return xScale(i) + xScale.bandwidth()/2})
                     .attr("cy",function(d){return yScaleStay(d['stayDuration'])})
-                    .attr("r",configuration['circle_radius'])
+                    .attr("r",function(d){return radiusScaler(d['count'])})
                     .on("mouseover",function(d,i){
                         d3.select(this)
                                 .attr("r",configuration['circle_radius_focus']);
-                        tooltipDisplay.show(d,d3.select(this));
+                        tooltipAge.show(d,d3.select(this));
+                        tooltipCount.show(d,d3.select(this));
                     })
                     .on("mouseout",function(d,i){
                         d3.select(this)
-                                .attr("r",configuration['circle_radius']);
-                        tooltipDisplay.hide();
+                                .attr("r",function(d){return radiusScaler(d['count'])});
+                        tooltipAge.hide();
+                        tooltipCount.hide();
                     });
         }
+
     </script>
     <center>
         <svg width="100%" height="650px">
