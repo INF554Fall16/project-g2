@@ -92,36 +92,19 @@ t<-table(tmp)
 which(t>2000)
 for (i in 1:length(tmp)) {
   tmp[i]=trimws(tmp[i])
-  switch ( EXPR=tmp[i],
-    "Black" = "Black",
-    "Black/White" = "Black/White",
-    "Brown" ="Brown",
-    "Brown Tabby" = "Brown Tabby",
-    "Brown/White" = "Brown/White",
-    "Tan/White" = "Tan/White",
-    "White" = "White",
-    tmp[i] <- "Other")
-}
+  flag = 0
+  if (tmp[i]=="Black") {tmp[i]="Black"; flag=1; }
+  if (tmp[i]=="Black/White") {tmp[i]="Black/White"; flag=1; }
+  if (tmp[i]=="Brown") {tmp[i]="Brown"; flag=1; }
+  if (tmp[i]=="Brown Tabby") {tmp[i]="Brown"; flag=1; }
+  if (tmp[i]=="Brown/White") {tmp[i]="Brown/White"; flag=1; }
+  if (tmp[i]=="Tan/White") {tmp[i]="Tan/White"; flag=1; }
+  if (tmp[i]=="White") {tmp[i]="White"; flag=1; }
+  if (flag ==0) {tmp[i] = "Other"}}
 tmp <- factor(tmp)
 joinDf$Color.Intake <- tmp
 
-tmp <- joinDf$Color.Outcome
-t<-table(tmp)
-which(t>2000)
-for (i in 1:length(tmp)) {
-  tmp[i]=trimws(tmp[i])
-  switch ( EXPR=tmp[i],
-           "Black" = "Black",
-           "Black/White" = "Black/White",
-           "Brown" ="Brown",
-           "Brown Tabby" = "Brown Tabby",
-           "Brown/White" = "Brown/White",
-           "Tan/White" = "Tan/White",
-           "White" = "White",
-           tmp[i] <- "Other")
-}
-tmp <- factor(tmp)
-joinDf$Color.Outcome <- tmp
+joinDf$Color.Outcome <- NULL
 
 joinDf <- joinDf[joinDf$Sex.Intake!="NULL",]
 joinDf <- joinDf[joinDf$Sex.Outcome!="NULL",]
@@ -155,14 +138,14 @@ joinDf$Sex.Intake <- factor(joinDf$Sex.Intake)
 joinDf$Sex.Outcome <- factor(joinDf$Sex.Outcome)
 
 # type->sex(intake)
-rm(i,t,tmp,tmp2)
+#rm(i,t,tmp,tmp2)
 mytable <- table(joinDf$Type.Intake,joinDf$Surgeried.Intake)
 mytable <- as.data.frame.matrix(mytable)
-rownames(mytable) <- c("I.Bird","I.Cat","I.Dog","I.Livestock","I.OtherType")
-colnames(mytable) <- c("I.BirthControlled","I.Intact","I.Unknown.")
-mytable$x=c("I.Bird","I.Cat","I.Dog","I.Livestock","I.OtherType")
-mytable <- mytable[c("x","I.BirthControlled","I.Intact","I.Unknown.")]
-long_mytable <- mytable %>% gather(y, Count, I.BirthControlled :I.Unknown.)
+rownames(mytable) <- c("Bird","Cat","Dog","Livestock","OtherType")
+colnames(mytable) <- c("BirthControlled","Intact","Unknown.")
+mytable$x=c("Bird","Cat","Dog","Livestock","OtherType")
+mytable <- mytable[c("x","BirthControlled","Intact","Unknown.")]
+long_mytable <- mytable %>% gather(y, Count, BirthControlled :Unknown.)
 rm(mytable)
 
 #rm(i,t,tmp,tmp2)
@@ -178,40 +161,40 @@ rm(mytable)
 
 mytable <- table(joinDf$Surgeried.Intake,joinDf$Sex.Intake)
 mytable <- as.data.frame.matrix(mytable)
-rownames(mytable) <- c("I.BirthControlled","I.Intact","I.Unknown.")
-colnames(mytable) <- c("I.IntactFemale","I.IntactMale","I.NeuteredMale","I.SpayedFemale","I.Unknown")
-mytable$x=c("I.BirthControlled","I.Intact","I.Unknown.")
-mytable <- mytable[c("x","I.IntactFemale","I.IntactMale","I.NeuteredMale","I.SpayedFemale","I.Unknown")]
-new_mytable <- mytable %>% gather(y, Count, I.IntactFemale : I.Unknown)
+rownames(mytable) <- c("BirthControlled","Intact","Unknown.")
+colnames(mytable) <- c("IntactFemale","IntactMale","NeuteredMale","SpayedFemale","Unknown")
+mytable$x=c("BirthControlled","Intact","Unknown.")
+mytable <- mytable[c("x","IntactFemale","IntactMale","NeuteredMale","SpayedFemale","Unknown")]
+new_mytable <- mytable %>% gather(y, Count, IntactFemale : Unknown)
 long_mytable <- rbind(long_mytable,new_mytable)
 rm(mytable, new_mytable)
 
 
 mytable <- table(joinDf$Sex.Intake,joinDf$Age.Intake)
 mytable <- as.data.frame.matrix(mytable)
-rownames(mytable) <- c("I.IntactFemale","I.IntactMale","I.NeuteredMale","I.SpayedFemale","I.Unknown")
-colnames(mytable) <- c("I.YoungerThan1YearOld","I.OlderThan6YearsOld","I.1to3YearsOld","I.3to6YearsOld")
-mytable$x=c("I.IntactFemale","I.IntactMale","I.NeuteredMale","I.SpayedFemale","I.Unknown")
-mytable <- mytable[c("x","I.YoungerThan1YearOld","I.OlderThan6YearsOld","I.1to3YearsOld","I.3to6YearsOld")]
-new_mytable <- mytable %>% gather(y, Count, I.YoungerThan1YearOld : I.3to6YearsOld)
+rownames(mytable) <- c("IntactFemale","IntactMale","NeuteredMale","SpayedFemale","Unknown")
+colnames(mytable) <- c("YoungerThan1YearOld","OlderThan6YearsOld","Age_From_1-3_YearsOld","Age_From_3_6_YearsOld")
+mytable$x=c("IntactFemale","IntactMale","NeuteredMale","SpayedFemale","Unknown")
+mytable <- mytable[c("x","YoungerThan1YearOld","OlderThan6YearsOld","Age_From_1-3_YearsOld","Age_From_3_6_YearsOld")]
+new_mytable <- mytable %>% gather(y, Count, YoungerThan1YearOld : Age_From_3_6_YearsOld)
 long_mytable <- rbind(long_mytable,new_mytable)
 rm(mytable, new_mytable)
 
 mytable <- table(joinDf$Age.Intake,joinDf$Color.Intake)
 mytable <- as.data.frame.matrix(mytable)
-rownames(mytable) <- c("I.YoungerThan1YearOld","I.OlderThan6YearsOld","I.1to3YearsOld","I.3to6YearsOld")
-colnames(mytable) <- c("I.Black","I.BlacknWhite","I.Brown","I.BrownnTabby","I.BrownnWhite","I.OtherColor","I.TannWhite","I.White")
-mytable$x=c("I.YoungerThan1YearOld","I.OlderThan6YearsOld","I.1to3YearsOld","I.3to6YearsOld")
-mytable <- mytable[c("x","I.Black","I.BlacknWhite","I.Brown","I.BrownnTabby","I.BrownnWhite","I.OtherColor","I.TannWhite","I.White")]
-new_mytable <- mytable %>% gather(y, Count, I.Black : I.White)
+rownames(mytable) <- c("YoungerThan1YearOld","OlderThan6YearsOld","Age_From_1-3_YearsOld","Age_From_3_6_YearsOld")
+colnames(mytable) <- c("Black","BlacknWhite","Brown","BrownnWhite","OtherColor","TannWhite","White")
+mytable$x=c("YoungerThan1YearOld","OlderThan6YearsOld","Age_From_1-3_YearsOld","Age_From_3_6_YearsOld")
+mytable <- mytable[c("x","Black","BlacknWhite","Brown","BrownnWhite","OtherColor","TannWhite","White")]
+new_mytable <- mytable %>% gather(y, Count, Black : White)
 long_mytable <- rbind(long_mytable,new_mytable)
 rm(mytable, new_mytable)
 
 mytable <- table(joinDf$Color.Intake,joinDf$I)
 mytable <- as.data.frame.matrix(mytable)
-rownames(mytable) <- c("I.Black","I.BlacknWhite","I.Brown","I.BrownnTabby","I.BrownnWhite","I.OtherColor","I.TannWhite","I.White")
+rownames(mytable) <- c("Black","BlacknWhite","Brown","BrownnWhite","OtherColor","TannWhite","White")
 colnames(mytable) <- c("Incoming")
-mytable$x=c("I.Black","I.BlacknWhite","I.Brown","I.BrownnTabby","I.BrownnWhite","I.OtherColor","I.TannWhite","I.White")
+mytable$x=c("Black","BlacknWhite","Brown","BrownnWhite","OtherColor","TannWhite","White")
 mytable <- mytable[c("x","Incoming")]
 new_mytable <- mytable %>% gather(y, Count, Incoming)
 long_mytable <- rbind(long_mytable,new_mytable)
@@ -237,58 +220,56 @@ new_mytable <- mytable %>% gather(y, Count, Outgoing)
 long_mytable <- rbind(long_mytable,new_mytable)
 rm(mytable, new_mytable)
 
-mytable <- table(joinDf$O, joinDf$Color.Outcome)
+mytable <- table(joinDf$O, joinDf$Age.Outcome)
 mytable <- as.data.frame.matrix(mytable)
-colnames(mytable) <- c("O.Black","O.BlacknWhite","O.Brown","O.BrownnTabby","O.BrownnWhite","O.OtherColor","O.TannWhite","O.White")
+colnames(mytable) <- c(c)
 rownames(mytable) <- c("Outgoing")
 mytable$x=c("Outgoing")
-mytable <- mytable[c("x","O.Black","O.BlacknWhite","O.Brown","O.BrownnTabby","O.BrownnWhite","O.OtherColor","O.TannWhite","O.White")]
-new_mytable <- mytable %>% gather(y, Count, O.Black : O.White)
+mytable <- mytable[c("x",".YoungerThan1YearOld",".OlderThan6YearsOld",".Age_From_1-3_YearsOld",".Age_From_3_6_YearsOld")]
+new_mytable <- mytable %>% gather(y, Count, .YoungerThan1YearOld : .Age_From_3_6_YearsOld)
 long_mytable <- rbind(long_mytable,new_mytable)
 rm(mytable, new_mytable)
 
 
-mytable <- table(joinDf$Color.Outcome,joinDf$Age.Outcome)
+#mytable <- table(joinDf$Color.Outcome,joinDf$Age.Outcome)
+#mytable <- as.data.frame.matrix(mytable)
+#rownames(mytable) <- c("O.Black","O.BlacknWhite","O.Brown","O.BrownnTabby","O.BrownnWhite","O.OtherColor","O.TannWhite","O.White")
+#colnames(mytable) <- c("O.YoungerThan1YearOld","O.OlderThan6YearsOld","O.1to3YearsOld","O.3to6YearsOld")
+#mytable$x=c("O.Black","O.BlacknWhite","O.Brown","O.BrownnTabby","O.BrownnWhite","O.OtherColor","O.TannWhite","O.White")
+#mytable <- mytable[c("x","O.YoungerThan1YearOld","O.OlderThan6YearsOld","O.1to3YearsOld","O.3to6YearsOld")]
+#new_mytable <- mytable %>% gather(y, Count, O.YoungerThan1YearOld : O.3to6YearsOld)
+#long_mytable <- rbind(long_mytable,new_mytable)
+#rm(mytable, new_mytable)
+
+mytable <- table(joinDf$Age.Outcome,joinDf$Surgeried.Outcome)
 mytable <- as.data.frame.matrix(mytable)
-rownames(mytable) <- c("O.Black","O.BlacknWhite","O.Brown","O.BrownnTabby","O.BrownnWhite","O.OtherColor","O.TannWhite","O.White")
-colnames(mytable) <- c("O.YoungerThan1YearOld","O.OlderThan6YearsOld","O.1to3YearsOld","O.3to6YearsOld")
-mytable$x=c("O.Black","O.BlacknWhite","O.Brown","O.BrownnTabby","O.BrownnWhite","O.OtherColor","O.TannWhite","O.White")
-mytable <- mytable[c("x","O.YoungerThan1YearOld","O.OlderThan6YearsOld","O.1to3YearsOld","O.3to6YearsOld")]
-new_mytable <- mytable %>% gather(y, Count, O.YoungerThan1YearOld : O.3to6YearsOld)
+rownames(mytable) <- c(".YoungerThan1YearOld",".OlderThan6YearsOld",".Age_From_1-3_YearsOld",".Age_From_3_6_YearsOld")
+colnames(mytable) <- c(".BirthControlled",".Intact",".Unknown.")
+mytable$x=c(".YoungerThan1YearOld",".OlderThan6YearsOld",".Age_From_1-3_YearsOld",".Age_From_3_6_YearsOld")
+mytable <- mytable[c("x",".BirthControlled",".Intact",".Unknown.")]
+new_mytable <- mytable %>% gather(y, Count,  .BirthControlled : .Unknown.)
 long_mytable <- rbind(long_mytable,new_mytable)
 rm(mytable, new_mytable)
 
-mytable <- table(joinDf$Age.Outcome,joinDf$Sex.Outcome)
-mytable <- as.data.frame.matrix(mytable)
-rownames(mytable) <- c("O.YoungerThan1YearOld","O.OlderThan6YearsOld","O.1to3YearsOld","O.3to6YearsOld")
-colnames(mytable) <- c("O.IntactFemale","O.IntactMale","O.NeuteredMale","O.SpayedFemale","O.Unknown")
-mytable$x=c("O.YoungerThan1YearOld","O.OlderThan6YearsOld","O.1to3YearsOld","O.3to6YearsOld")
-mytable <- mytable[c("x","O.IntactFemale","O.IntactMale","O.NeuteredMale","O.SpayedFemale","O.Unknown")]
-new_mytable <- mytable %>% gather(y, Count, O.IntactFemale : O.Unknown)
-long_mytable <- rbind(long_mytable,new_mytable)
-rm(mytable, new_mytable)
+#mytable <- table(joinDf$Sex.Outcome, joinDf$Surgeried.Outcome)
+#mytable <- as.data.frame.matrix(mytable)
+#rownames(mytable) <- c("O.IntactFemale","O.IntactMale","O.NeuteredMale","O.SpayedFemale","O.Unknown")
+#colnames(mytable) <- c("O.BirthControlled","O.Intact","O.Unknown.")
+#mytable$x=c("O.IntactFemale","O.IntactMale","O.NeuteredMale","O.SpayedFemale","O.Unknown")
+#mytable <- mytable[c("x","O.BirthControlled","O.Intact","O.Unknown.")]
+#new_mytable <- mytable %>% gather(y, Count, O.BirthControlled : O.Unknown.)
+#long_mytable <- rbind(long_mytable,new_mytable)
+#rm(mytable, new_mytable)
 
-mytable <- table(joinDf$Sex.Outcome, joinDf$Surgeried.Outcome)
-mytable <- as.data.frame.matrix(mytable)
-rownames(mytable) <- c("O.IntactFemale","O.IntactMale","O.NeuteredMale","O.SpayedFemale","O.Unknown")
-colnames(mytable) <- c("O.BirthControlled","O.Intact","O.Unknown.")
-mytable$x=c("O.IntactFemale","O.IntactMale","O.NeuteredMale","O.SpayedFemale","O.Unknown")
-mytable <- mytable[c("x","O.BirthControlled","O.Intact","O.Unknown.")]
-new_mytable <- mytable %>% gather(y, Count, O.BirthControlled : O.Unknown.)
-long_mytable <- rbind(long_mytable,new_mytable)
-rm(mytable, new_mytable)
-
-mytable <- table(joinDf$Surgeried.Outcome, joinDf$Type.Outcome)
-mytable <- as.data.frame.matrix(mytable)
-rownames(mytable) <- c("O.BirthControlled","O.Intact","O.Unknown.")
-colnames(mytable) <- c("O.Bird","O.Cat","O.Dog","O.Livestock","O.OtherType")
-mytable$x=c("O.BirthControlled","O.Intact","O.Unknown.")
-mytable <- mytable[c("x","O.Bird","O.Cat","O.Dog","O.Livestock","O.OtherType")]
-new_mytable <- mytable %>% gather(y, Count, O.Bird : O.OtherType)
-long_mytable <- rbind(long_mytable,new_mytable)
-
-
-rm(mytable, new_mytable)
+#mytable <- table(joinDf$Surgeried.Outcome, joinDf$Type.Outcome)
+#mytable <- as.data.frame.matrix(mytable)
+#rownames(mytable) <- c("O.BirthControlled","O.Intact","O.Unknown.")
+#colnames(mytable) <- c("O.Bird","O.Cat","O.Dog","O.Livestock","O.OtherType")
+#mytable$x=c("O.BirthControlled","O.Intact","O.Unknown.")
+#mytable <- mytable[c("x","O.Bird","O.Cat","O.Dog","O.Livestock","O.OtherType")]
+#new_mytable <- mytable %>% gather(y, Count, O.Bird : O.OtherType)
+#long_mytable <- rbind(long_mytable,new_mytable)
+#rm(mytable, new_mytable)
 colnames(long_mytable) <- c("source","target","value")
 write.csv(long_mytable,"../data/sankeyFlow.csv",row.names = FALSE)
 

@@ -1,199 +1,120 @@
-"source","target","value"
-"I.Bird","I.BirthControlled",0
-"I.Cat","I.BirthControlled",5309
-"I.Dog","I.BirthControlled",19258
-"I.Livestock","I.BirthControlled",1
-"I.OtherType","I.BirthControlled",47
-"I.Bird","I.Intact",105
-"I.Cat","I.Intact",15341
-"I.Dog","I.Intact",22339
-"I.Livestock","I.Intact",4
-"I.OtherType","I.Intact",344
-"I.Bird","I.Unknown.",123
-"I.Cat","I.Unknown.",2105
-"I.Dog","I.Unknown.",160
-"I.Livestock","I.Unknown.",2
-"I.OtherType","I.Unknown.",2675
-"I.BirthControlled","I.IntactFemale",0
-"I.Intact","I.IntactFemale",18282
-"I.Unknown.","I.IntactFemale",0
-"I.BirthControlled","I.IntactMale",0
-"I.Intact","I.IntactMale",19851
-"I.Unknown.","I.IntactMale",0
-"I.BirthControlled","I.NeuteredMale",13227
-"I.Intact","I.NeuteredMale",0
-"I.Unknown.","I.NeuteredMale",0
-"I.BirthControlled","I.SpayedFemale",11388
-"I.Intact","I.SpayedFemale",0
-"I.Unknown.","I.SpayedFemale",0
-"I.BirthControlled","I.Unknown",0
-"I.Intact","I.Unknown",0
-"I.Unknown.","I.Unknown",5065
-"I.IntactFemale","I.YoungerThan1YearOld",13503
-"I.IntactMale","I.YoungerThan1YearOld",13884
-"I.NeuteredMale","I.YoungerThan1YearOld",3809
-"I.SpayedFemale","I.YoungerThan1YearOld",3593
-"I.Unknown","I.YoungerThan1YearOld",4078
-"I.IntactFemale","I.OlderThan6YearsOld",584
-"I.IntactMale","I.OlderThan6YearsOld",701
-"I.NeuteredMale","I.OlderThan6YearsOld",2581
-"I.SpayedFemale","I.OlderThan6YearsOld",2279
-"I.Unknown","I.OlderThan6YearsOld",27
-"I.IntactFemale","I.1to3YearsOld",3324
-"I.IntactMale","I.1to3YearsOld",4085
-"I.NeuteredMale","I.1to3YearsOld",3935
-"I.SpayedFemale","I.1to3YearsOld",3335
-"I.Unknown","I.1to3YearsOld",888
-"I.IntactFemale","I.3to6YearsOld",871
-"I.IntactMale","I.3to6YearsOld",1181
-"I.NeuteredMale","I.3to6YearsOld",2902
-"I.SpayedFemale","I.3to6YearsOld",2181
-"I.Unknown","I.3to6YearsOld",72
-"I.YoungerThan1YearOld","I.Black",3494
-"I.OlderThan6YearsOld","I.Black",421
-"I.1to3YearsOld","I.Black",890
-"I.3to6YearsOld","I.Black",428
-"I.YoungerThan1YearOld","I.BlacknWhite",4363
-"I.OlderThan6YearsOld","I.BlacknWhite",607
-"I.1to3YearsOld","I.BlacknWhite",1631
-"I.3to6YearsOld","I.BlacknWhite",656
-"I.YoungerThan1YearOld","I.Brown",1569
-"I.OlderThan6YearsOld","I.Brown",229
-"I.1to3YearsOld","I.Brown",696
-"I.3to6YearsOld","I.Brown",221
-"I.YoungerThan1YearOld","I.BrownnTabby",2691
-"I.OlderThan6YearsOld","I.BrownnTabby",157
-"I.1to3YearsOld","I.BrownnTabby",404
-"I.3to6YearsOld","I.BrownnTabby",136
-"I.YoungerThan1YearOld","I.BrownnWhite",1068
-"I.OlderThan6YearsOld","I.BrownnWhite",246
-"I.1to3YearsOld","I.BrownnWhite",818
-"I.3to6YearsOld","I.BrownnWhite",289
-"I.YoungerThan1YearOld","I.OtherColor",23596
-"I.OlderThan6YearsOld","I.OtherColor",3998
-"I.1to3YearsOld","I.OtherColor",9748
-"I.3to6YearsOld","I.OtherColor",4679
-"I.YoungerThan1YearOld","I.TannWhite",1112
-"I.OlderThan6YearsOld","I.TannWhite",189
-"I.1to3YearsOld","I.TannWhite",635
-"I.3to6YearsOld","I.TannWhite",370
-"I.YoungerThan1YearOld","I.White",974
-"I.OlderThan6YearsOld","I.White",325
-"I.1to3YearsOld","I.White",745
-"I.3to6YearsOld","I.White",428
-"I.Black","Incoming",5233
-"I.BlacknWhite","Incoming",7257
-"I.Brown","Incoming",2715
-"I.BrownnTabby","Incoming",3388
-"I.BrownnWhite","Incoming",2421
-"I.OtherColor","Incoming",42021
-"I.TannWhite","Incoming",2306
-"I.White","Incoming",2472
-"Incoming","Other",8
-"Incoming","Adoption",28041
-"Incoming","Died",497
-"Incoming","Disposal",223
-"Incoming","Euthanasia",5025
-"Incoming","Missing",45
-"Incoming","Relocate",13
-"Incoming","ReturnToOwner",14926
-"Incoming","Transfer",19035
-"Other","Outgoing",8
-"Adoption","Outgoing",28041
-"Died","Outgoing",497
-"Disposal","Outgoing",223
-"Euthanasia","Outgoing",5025
-"Missing","Outgoing",45
-"Relocate","Outgoing",13
-"ReturnToOwner","Outgoing",14926
-"Transfer","Outgoing",19035
-"Outgoing","O.Black",5233
-"Outgoing","O.BlacknWhite",7257
-"Outgoing","O.Brown",2715
-"Outgoing","O.BrownnTabby",3388
-"Outgoing","O.BrownnWhite",2421
-"Outgoing","O.OtherColor",42021
-"Outgoing","O.TannWhite",2306
-"Outgoing","O.White",2472
-"O.Black","O.YoungerThan1YearOld",3509
-"O.BlacknWhite","O.YoungerThan1YearOld",4373
-"O.Brown","O.YoungerThan1YearOld",1569
-"O.BrownnTabby","O.YoungerThan1YearOld",2709
-"O.BrownnWhite","O.YoungerThan1YearOld",1073
-"O.OtherColor","O.YoungerThan1YearOld",23629
-"O.TannWhite","O.YoungerThan1YearOld",1104
-"O.White","O.YoungerThan1YearOld",982
-"O.Black","O.OlderThan6YearsOld",426
-"O.BlacknWhite","O.OlderThan6YearsOld",622
-"O.Brown","O.OlderThan6YearsOld",235
-"O.BrownnTabby","O.OlderThan6YearsOld",159
-"O.BrownnWhite","O.OlderThan6YearsOld",255
-"O.OtherColor","O.OlderThan6YearsOld",4056
-"O.TannWhite","O.OlderThan6YearsOld",190
-"O.White","O.OlderThan6YearsOld",334
-"O.Black","O.1to3YearsOld",867
-"O.BlacknWhite","O.1to3YearsOld",1611
-"O.Brown","O.1to3YearsOld",693
-"O.BrownnTabby","O.1to3YearsOld",384
-"O.BrownnWhite","O.1to3YearsOld",808
-"O.OtherColor","O.1to3YearsOld",9652
-"O.TannWhite","O.1to3YearsOld",637
-"O.White","O.1to3YearsOld",734
-"O.Black","O.3to6YearsOld",431
-"O.BlacknWhite","O.3to6YearsOld",651
-"O.Brown","O.3to6YearsOld",218
-"O.BrownnTabby","O.3to6YearsOld",136
-"O.BrownnWhite","O.3to6YearsOld",285
-"O.OtherColor","O.3to6YearsOld",4684
-"O.TannWhite","O.3to6YearsOld",375
-"O.White","O.3to6YearsOld",422
-"O.YoungerThan1YearOld","O.IntactFemale",5033
-"O.OlderThan6YearsOld","O.IntactFemale",426
-"O.1to3YearsOld","O.IntactFemale",1140
-"O.3to6YearsOld","O.IntactFemale",318
-"O.YoungerThan1YearOld","O.IntactMale",4984
-"O.OlderThan6YearsOld","O.IntactMale",485
-"O.1to3YearsOld","O.IntactMale",1300
-"O.3to6YearsOld","O.IntactMale",444
-"O.YoungerThan1YearOld","O.NeuteredMale",12723
-"O.OlderThan6YearsOld","O.NeuteredMale",2853
-"O.1to3YearsOld","O.NeuteredMale",6657
-"O.3to6YearsOld","O.NeuteredMale",3632
-"O.YoungerThan1YearOld","O.SpayedFemale",12081
-"O.OlderThan6YearsOld","O.SpayedFemale",2486
-"O.1to3YearsOld","O.SpayedFemale",5450
-"O.3to6YearsOld","O.SpayedFemale",2736
-"O.YoungerThan1YearOld","O.Unknown",4127
-"O.OlderThan6YearsOld","O.Unknown",27
-"O.1to3YearsOld","O.Unknown",839
-"O.3to6YearsOld","O.Unknown",72
-"O.IntactFemale","O.BirthControlled",0
-"O.IntactMale","O.BirthControlled",0
-"O.NeuteredMale","O.BirthControlled",25865
-"O.SpayedFemale","O.BirthControlled",22753
-"O.Unknown","O.BirthControlled",0
-"O.IntactFemale","O.Intact",6917
-"O.IntactMale","O.Intact",7213
-"O.NeuteredMale","O.Intact",0
-"O.SpayedFemale","O.Intact",0
-"O.Unknown","O.Intact",0
-"O.IntactFemale","O.Unknown.",0
-"O.IntactMale","O.Unknown.",0
-"O.NeuteredMale","O.Unknown.",0
-"O.SpayedFemale","O.Unknown.",0
-"O.Unknown","O.Unknown.",5065
-"O.BirthControlled","O.Bird",0
-"O.Intact","O.Bird",105
-"O.Unknown.","O.Bird",123
-"O.BirthControlled","O.Cat",13475
-"O.Intact","O.Cat",7175
-"O.Unknown.","O.Cat",2105
-"O.BirthControlled","O.Dog",35071
-"O.Intact","O.Dog",6526
-"O.Unknown.","O.Dog",160
-"O.BirthControlled","O.Livestock",1
-"O.Intact","O.Livestock",4
-"O.Unknown.","O.Livestock",2
-"O.BirthControlled","O.OtherType",71
-"O.Intact","O.OtherType",320
-"O.Unknown.","O.OtherType",2675
+source,target,value
+Bird,BirthControlled,0
+Cat,BirthControlled,5309
+Dog,BirthControlled,19258
+Livestock,BirthControlled,1
+OtherType,BirthControlled,47
+Bird,Intact,105
+Cat,Intact,15341
+Dog,Intact,22339
+Livestock,Intact,4
+OtherType,Intact,344
+Bird,Unknown.,123
+Cat,Unknown.,2105
+Dog,Unknown.,160
+Livestock,Unknown.,2
+OtherType,Unknown.,2675
+BirthControlled,IntactFemale,0
+Intact,IntactFemale,18282
+Unknown.,IntactFemale,0
+BirthControlled,IntactMale,0
+Intact,IntactMale,19851
+Unknown.,IntactMale,0
+BirthControlled,NeuteredMale,13227
+Intact,NeuteredMale,0
+Unknown.,NeuteredMale,0
+BirthControlled,SpayedFemale,11388
+Intact,SpayedFemale,0
+Unknown.,SpayedFemale,0
+BirthControlled,Unknown,0
+Intact,Unknown,0
+Unknown.,Unknown,5065
+IntactFemale,< 1 Year Old,13503
+IntactMale,< 1 Year Old,13884
+NeuteredMale,< 1 Year Old,3809
+SpayedFemale,< 1 Year Old,3593
+Unknown,< 1 Year Old,4078
+IntactFemale,> 6 Years Old,584
+IntactMale,> 6 Years Old,701
+NeuteredMale,> 6 Years Old,2581
+SpayedFemale,> 6 Years Old,2279
+Unknown,> 6 Years Old,27
+IntactFemale,1-3 Years Old,3324
+IntactMale,1-3 Years Old,4085
+NeuteredMale,1-3 Years Old,3935
+SpayedFemale,1-3 Years Old,3335
+Unknown,1-3 Years Old,888
+IntactFemale,3-6 Years Old,871
+IntactMale,3-6 Years Old,1181
+NeuteredMale,3-6 Years Old,2902
+SpayedFemale,3-6 Years Old,2181
+Unknown,3-6 Years Old,72
+< 1 Year Old,Black,3494
+> 6 Years Old,Black,421
+1-3 Years Old,Black,890
+3-6 Years Old,Black,428
+< 1 Year Old,BlacknWhite,4363
+> 6 Years Old,BlacknWhite,607
+1-3 Years Old,BlacknWhite,1631
+3-6 Years Old,BlacknWhite,656
+< 1 Year Old,Brown,4260
+> 6 Years Old,Brown,386
+1-3 Years Old,Brown,1100
+3-6 Years Old,Brown,357
+< 1 Year Old,BrownnWhite,1068
+> 6 Years Old,BrownnWhite,246
+1-3 Years Old,BrownnWhite,818
+3-6 Years Old,BrownnWhite,289
+< 1 Year Old,OtherColor,23596
+> 6 Years Old,OtherColor,3998
+1-3 Years Old,OtherColor,9748
+3-6 Years Old,OtherColor,4679
+< 1 Year Old,TannWhite,1112
+> 6 Years Old,TannWhite,189
+1-3 Years Old,TannWhite,635
+3-6 Years Old,TannWhite,370
+< 1 Year Old,White,974
+> 6 Years Old,White,325
+1-3 Years Old,White,745
+3-6 Years Old,White,428
+Black,Incoming,5233
+BlacknWhite,Incoming,7257
+Brown,Incoming,6103
+BrownnWhite,Incoming,2421
+OtherColor,Incoming,42021
+TannWhite,Incoming,2306
+White,Incoming,2472
+Incoming,Other,8
+Incoming,Adoption,28041
+Incoming,Died,497
+Incoming,Disposal,223
+Incoming,Euthanasia,5025
+Incoming,Missing,45
+Incoming,Relocate,13
+Incoming,ReturnToOwner,14926
+Incoming,Transfer,19035
+Other,Outgoing,8
+Adoption,Outgoing,28041
+Died,Outgoing,497
+Disposal,Outgoing,223
+Euthanasia,Outgoing,5025
+Missing,Outgoing,45
+Relocate,Outgoing,13
+ReturnToOwner,Outgoing,14926
+Transfer,Outgoing,19035
+Outgoing,.< 1 Year Old,38948
+Outgoing,.> 6 Years Old,6277
+Outgoing,.1-3 Years Old,15386
+Outgoing,.3-6 Years Old,7202
+.< 1 Year Old,.BirthControlled,24804
+.> 6 Years Old,.BirthControlled,5339
+.1-3 Years Old,.BirthControlled,12107
+.3-6 Years Old,.BirthControlled,6368
+.< 1 Year Old,.Intact,10017
+.> 6 Years Old,.Intact,911
+.1-3 Years Old,.Intact,2440
+.3-6 Years Old,.Intact,762
+.< 1 Year Old,.Unknown.,4127
+.> 6 Years Old,.Unknown.,27
+.1-3 Years Old,.Unknown.,839
+.3-6 Years Old,.Unknown.,72
