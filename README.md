@@ -5,7 +5,7 @@ Members:
 
 2) Wenjia Wang
 
-The project is hosted as [this site](http://www-scf.usc.edu/~nakarese/inf554)
+The project is hosted at [this site](http://www-scf.usc.edu/~nakarese/inf554)
 
 The visualization paper can be found [here](Visualization_Paper.pdf)
 
