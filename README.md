@@ -5,6 +5,8 @@ Members:
 
 2) Wenjia Wang
 
+The visualization paper can be found [here](Visualization_Paper.pdf)
+
 # Rough Ideas[Oct. 7]
 
 Project Planning: Providing visualization for Animal Services Intake Data
