@@ -145,7 +145,7 @@
           // Use Feature to display multiple path elements:
 
           d3.queue()
-                .defer(d3.csv,"/data/foundlocation.csv", function(d) {
+                .defer(d3.csv,"data/foundlocation.csv", function(d) {
                 	return {
                     lat: +d.lat,
                     lng: +d.lng, // + to convert to float otherwise we get text!
@@ -199,7 +199,7 @@
                 };}
 
                 )
-                .defer(d3.json,"/data/austinNeighborhood.geojson")
+                .defer(d3.json,"data/austinNeighborhood.geojson")
                 .await(function(error,data,boundery){
 
                     dataset=data;
