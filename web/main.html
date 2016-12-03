@@ -31,16 +31,16 @@
             <p>Found location of intake animals is heuristic, which can let people explore potential patterns in finding homeless animals. We use <b>geomap</b> to display top-10 <a href="#" data-toggle="tooltip" title="Filled with orange">frequent area</a> in finding animals. Besides, people can choose to see frequent area base on total record, different animals, <a href="#" data-toggle="tooltip" title="From 2013 to 2016">years</a>, <a href="#" data-toggle="tooltip" title="From spring to winter">seasons</a>, <a href="#" data-toggle="tooltip" title="From morning to midnight">time in a day </a>. The opacity of orange represent how much animals are found here and people can click on the frequent area to see the exact number.</p>
             
         </div>
-    </div>c
+    </div>
     <iframe frameborder="0" src="geomap.html" width="800" height="800"></iframe>
     
     <div class="container">
         <div class="jumbotron">
-            <p>There are multiple attributes to discribe animals. Here we use <b>sankey diagram</b> to display <a href="#" data-toggle="tooltip" title="width of the flow">the proportion</a> of each value in the <a href="#" data-toggle="tooltip" title="Nodes in the graph">attribute</a> and between different <a href="#" data-toggle="tooltip" title="Nodes in the graph">attribute</a>. This graph includes both attribute for <a href="#" data-toggle="tooltip" title="Prefixed with 'I.'"> incoming animals </a> and for <a href="#" data-toggle="tooltip" title="Prefixed with 'O.'"> outgoing animals </a>. The graph is also include one nodes column for adoption infromation, providing people with further exploration, like how some feature of animal effect it been adopt or not.</p>
+            <p>There are multiple attributes to discribe animals. Here we use <b>sankey diagram</b> to display <a href="#" data-toggle="tooltip" title="width of the flow">the proportion</a> of these <a href="#" data-toggle="tooltip" title="Nodes in the graph">attribute</a>. This graph includes both attribute for <a href="#" data-toggle="tooltip" title="Prefixed with 'I.'"> incoming animals </a> and for <a href="#" data-toggle="tooltip" title="Prefixed with 'O.'"> outgoing animals </a>. The graph is also include one nodes column for adoption infromation, providing people with further exploration, like how some feature of animal effect it been adopt or not.</p>
         </div>
     </div>
 
-    <iframe frameborder="0" src="sankey.html" width="1800" height="1000"></iframe>
+    <iframe frameborder="0" src="sankey.html" width="1200" height="800"></iframe>
     <div class="container">
         <div class="jumbotron">
             <p>We narrow down our focus to <b>dog & cat</b>. We interest in how long does it takes for the pet owners to take their pet back. <b>Small Multiple</b> is used to display a relationship between the <a href="#" data-toggle="tooltip" title="X-axis">Animal's age</a> (upon intake) and the <a href="#" data-toggle="tooltip" title="Y-axis & Line Chart">Median days</a> that the animals with this age range stayed until they were returned to their owner. For dogs, as they grow <b>older</b>, their owners tend to take them back <a href="#" data-toggle="tooltip" title="hover on any dots to get a clearer view">sooner</a>. This may suggest a <b>tighter relationship</b> between owner & dog as time go by. Surprisingly, such pattern is not observed in cats. Additionally, cat owners tend to take <b>longer</b> time to return their cat backs. By inspecting the <a href="#" data-toggle="tooltip" title="Histogram Chart">number of cats</a> in each age range, we noticed that this may be because of an insufficient number of records.</p>
